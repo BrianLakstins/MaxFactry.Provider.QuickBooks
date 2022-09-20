@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<QBWCXML>
+<AppName>TTD Web Site Integration</AppName>
+<AppID></AppID>
+<AppURL>https://store.tractortoolsdirect.com/MaxQuickbooksProviderApi/</AppURL>
+<AppDescription>TTD Web Site Integration</AppDescription>
+<AppSupport>https://store.tractortoolsdirect.com/MaxQuickbooksProvider/help</AppSupport>
+<UserName>ttd</UserName>
+<OwnerID>{b74aa8bc-4481-4403-8115-b87a244f0ce8}</OwnerID>
+<FileID>{f011ad83-c16d-419a-9fdd-df4a17b9c716}</FileID>
+<QBType>QBFS</QBType>
+</QBWCXML>

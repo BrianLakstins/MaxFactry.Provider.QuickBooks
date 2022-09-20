@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1D783D9D-6465-4986-8667-3AFEAB0DAC10}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MaxFactry.Provider.QuickBooksProvider_NF_4._5._2</RootNamespace>
+    <AssemblyName>MaxFactry.Provider.QuickBooksProvider-NF-4.5.2</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;net2;net4_52</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;net2;net4_52</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>MaxFactry.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.QBFC15, Version=15.0.0.1, Culture=neutral, PublicKeyToken=31d8aec643e18259, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\_references\Interop.QBFC15.dll</HintPath>
+    </Reference>
+    <Reference Include="MaxFactry.Base-NF-4.5.2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
+      <HintPath>..\..\_nuget\MaxFactry.General.1.0.1\lib\net452\MaxFactry.Base-NF-4.5.2.dll</HintPath>
+    </Reference>
+    <Reference Include="MaxFactry.Core-NF-4.5.2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
+      <HintPath>..\..\_nuget\MaxFactry.General.1.0.1\lib\net452\MaxFactry.Core-NF-4.5.2.dll</HintPath>
+    </Reference>
+    <Reference Include="MaxFactry.General-NF-4.5.2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
+      <HintPath>..\..\_nuget\MaxFactry.General.1.0.1\lib\net452\MaxFactry.General-NF-4.5.2.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessLayer\Entity\MaxQBItemDiscountEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBStandardTermsEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBInvoiceLineEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBORSalesOrPurchaseEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBORSalesAndPurchaseEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBBaseRefEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBBaseEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBAddressEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBInvoiceEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBCustomerEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBItemNonInventoryEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBItemServiceEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBItemEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBCustomerMessageEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBRequestEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBResponseEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBSessionEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBHostEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBWebConnectionApplicationEntity.cs" />
+    <Compile Include="BusinessLayer\Structure\MaxQBIAdditionalNotesRetStructure.cs" />
+    <Compile Include="BusinessLayer\Structure\MaxQBIAddressStructure.cs" />
+    <Compile Include="BusinessLayer\Structure\MaxQBIContactsRetStructure.cs" />
+    <Compile Include="BusinessLayer\Structure\MaxQBIQBBaseRefStructure.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBStandardTermsDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBORSalesOrPurchaseDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBORSalesAndPurchaseDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBBaseRefDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBInvoiceDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBInvoiceLineDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemSubtotalDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemSalesTaxDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemSalesTaxGroupDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemPaymentDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemOtherChargeDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemNonInventoryDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemInventoryDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemInventoryAssemblyDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemGroupDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemFixedAssetDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemDiscountDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemServiceDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBItemDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBCreditCardDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBContactDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBAddressBlockDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBAddressDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBBaseDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBCustomerMessageDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBAdditionalNotesRetDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBHostDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBCustomerDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBRequestDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBResponseDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBSessionDataModel.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBWebConnectApplicationDataModel.cs" />
+    <Compile Include="DataLayer\Repository\Interface\IMaxQuickbooksProviderRepositoryProvider.cs" />
+    <Compile Include="DataLayer\Repository\MaxQuickbooksProviderRepository.cs" />
+    <Compile Include="DataLayer\Repository\Provider\MaxQuickbooksProviderRepositoryProvider.cs" />
+    <Compile Include="Library\Interface\IMaxQuickbooksWebConnectProviderLibrary.cs" />
+    <Compile Include="Library\MaxQuickbooksWebConnectProviderLibrary.cs" />
+    <Compile Include="Library\Provider\MaxQuickbooksWebConnectProviderDefaultLibrary.cs" />
+    <Compile Include="MaxStartup.cs" />
+    <Compile Include="PresentationLayer\MaxSoapEnvelope.cs" />
+    <Compile Include="PresentationLayer\MaxSoapEnvelopeBody.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponse.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponseAuthenticate.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponseClientVersion.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponseCloseConnection.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponseConnectionError.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponseGetLastError.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponseReceiveResponseXML.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponseSendRequestXML.cs" />
+    <Compile Include="PresentationLayer\MaxSoapResponseServerVersion.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="MaxFactry.pfx" />
+    <None Include="MaxFactry.snk" />
+    <None Include="packages.config" />
+    <None Include="QBSDK_ProGuide.pdf" />
+    <None Include="QBWC_proguide.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Authenticate.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ClientVersion.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="QBWCWebServiceExample.cs.txt" />
+    <Content Include="QBWC_TTD_File.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PresentationLayer\Models\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
