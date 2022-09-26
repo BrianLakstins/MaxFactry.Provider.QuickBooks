@@ -1060,21 +1060,40 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
         private static void MapCustomerContent(ICustomerAdd loQBData, MaxData loData)
         {
             MaxQBCustomerDataModel loDataModel = loData.DataModel as MaxQBCustomerDataModel;
-            string lsExternalId = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.ExternalGUID));
-            if (!string.IsNullOrEmpty(lsExternalId))
+            Guid loExternalId = MaxConvertLibrary.ConvertToGuid(typeof(object), loData.Get(loDataModel.ExternalGUID));
+            if (loExternalId != Guid.Empty)
             {
-                Guid loExternalId = MaxConvertLibrary.ConvertToGuid(typeof(object), lsExternalId);
-                if (Guid.Empty != loExternalId)
-                {
-                    loQBData.ExternalGUID.SetValue("{" + loExternalId.ToString() + "}");
-                }
+                loQBData.ExternalGUID.SetValue("{" + loExternalId.ToString() + "}");
             }
-            
-            loQBData.CompanyName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.CompanyName)));
+
+            string lsCompany = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.CompanyName));
+            if (!string.IsNullOrEmpty(lsCompany))
+            {
+                loQBData.CompanyName.SetValue(lsCompany);
+            }
+
             loQBData.Email.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.Email)));
-            loQBData.FirstName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.FirstName)));
-            loQBData.LastName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.LastName)));
-            loQBData.AccountNumber.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.AccountNumber)));
+
+            string lsFirstName = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.FirstName));
+
+            if (!string.IsNullOrEmpty(lsFirstName))
+            {
+                loQBData.FirstName.SetValue(lsFirstName);
+            }
+
+            string lsLastName = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.LastName));
+            if (!string.IsNullOrEmpty(lsLastName))
+            {
+                loQBData.LastName.SetValue(lsLastName);
+            }
+
+            string lsAccountNumber = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.AccountNumber));
+
+            if (!string.IsNullOrEmpty(lsAccountNumber))
+            {
+                loQBData.AccountNumber.SetValue(lsAccountNumber);
+            }
+
             loQBData.Name.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.Name)));
 
             string lsBillingAddress = loData.Get(loDataModel.BillAddress) as string;
@@ -1097,7 +1116,12 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 }
             }
 
-            loQBData.ItemSalesTaxRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.ItemSalesTaxRef)));
+            string lsSalesTax = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.ItemSalesTaxRef));
+
+            if (!string.IsNullOrEmpty(lsSalesTax))
+            {
+                loQBData.ItemSalesTaxRef.FullName.SetValue(lsSalesTax);
+            }
         }
 
         private static void MapAddressContent(IAddress loQBData, MaxIndex loIndex)
