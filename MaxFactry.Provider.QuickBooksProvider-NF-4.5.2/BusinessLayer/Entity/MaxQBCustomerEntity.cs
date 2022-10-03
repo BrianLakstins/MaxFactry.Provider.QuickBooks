@@ -550,6 +550,19 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             }
         }
 
+        public string TermsRef
+        {
+            get
+            {
+                return this.GetString(this.DataModel.TermsRef);
+            }
+
+            set
+            {
+                this.Set(this.DataModel.TermsRef, value);
+            }
+        }
+
         /// <summary>
         /// Gets the Data Model for this entity
         /// </summary>

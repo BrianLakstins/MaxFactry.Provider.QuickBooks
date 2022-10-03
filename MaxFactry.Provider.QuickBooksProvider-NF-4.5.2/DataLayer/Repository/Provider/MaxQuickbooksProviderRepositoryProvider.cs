@@ -1117,10 +1117,15 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
 
             string lsSalesTax = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.ItemSalesTaxRef));
-
             if (!string.IsNullOrEmpty(lsSalesTax))
             {
                 loQBData.ItemSalesTaxRef.FullName.SetValue(lsSalesTax);
+            }
+
+            string lsTerms = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.TermsRef));
+            if (!string.IsNullOrEmpty(lsTerms))
+            {
+                loQBData.TermsRef.FullName.SetValue(lsTerms);
             }
         }
 
