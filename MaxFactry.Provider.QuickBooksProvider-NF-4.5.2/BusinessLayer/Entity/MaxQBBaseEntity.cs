@@ -187,5 +187,12 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             this.AlternateId = "QBDesktop";
             return base.Insert();
         }
+
+        public bool UpdateQBDesktop()
+        {
+            this.AlternateId = "QBDesktop";
+            this.SetId(Guid.NewGuid());
+            return base.Update();
+        }
     }
 }

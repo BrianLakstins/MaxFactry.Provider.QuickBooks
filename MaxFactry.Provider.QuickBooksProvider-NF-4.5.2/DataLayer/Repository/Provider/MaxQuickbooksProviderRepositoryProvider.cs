@@ -501,6 +501,107 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             return base.Insert(loData);
         }
 
+        public override bool Update(MaxData loData)
+        {
+            string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
+            if (!string.IsNullOrEmpty(lsAlternateId) && lsAlternateId == "QBDesktop")
+            {
+                if (loData.DataModel is MaxQBInvoiceDataModel)
+                {
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    IInvoiceAdd loQBData = loRequest.AppendInvoiceAddRq();
+                    MapInvoiceContent(loQBData, loData);
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            if (loResponse.StatusCode == 0)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                            }
+                        }
+                    }
+                }
+                else if (loData.DataModel is MaxQBCustomerDataModel)
+                {
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    ICustomerMod loQBData = loRequest.AppendCustomerModRq();
+                    MapCustomerContent(loQBData, loData);
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            if (loResponse.StatusCode == 0)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                            }
+                        }
+                    }
+                }
+                else if (loData.DataModel is MaxQBItemServiceDataModel)
+                {
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    IItemServiceAdd loQBData = loRequest.AppendItemServiceAddRq();
+                    MapItemServiceContent(loQBData, loData);
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            if (loResponse.StatusCode == 0)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemServiceDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                            }
+                        }
+                    }
+                }
+                else if (loData.DataModel is MaxQBItemNonInventoryDataModel)
+                {
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    IItemNonInventoryAdd loQBData = loRequest.AppendItemNonInventoryAddRq();
+                    MapItemNonInventoryContent(loQBData, loData);
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            if (loResponse.StatusCode == 0)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemNonInventoryDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            return base.Insert(loData);
+        }
+
+
         private static MaxData MapCustomerContent(ICustomerRet loDetail)
         {
             MaxQBCustomerDataModel loDataModel = new MaxQBCustomerDataModel();
@@ -967,7 +1068,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             return loDataReturn;
         }
 
-
         private static void MapInvoiceContent(IInvoiceAdd loQBData, MaxData loData)
         {
             MaxQBInvoiceDataModel loDataModel = loData.DataModel as MaxQBInvoiceDataModel;
@@ -1129,6 +1229,79 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
         }
 
+        private static void MapCustomerContent(ICustomerMod loQBData, MaxData loData)
+        {
+            MaxQBCustomerDataModel loDataModel = loData.DataModel as MaxQBCustomerDataModel;
+            string lsListId = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.ListID));
+            loQBData.ListID.SetValue(lsListId);
+
+            string lsEditSequence = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.EditSequence));
+            loQBData.EditSequence.SetValue(lsEditSequence);
+
+            string lsCompany = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.CompanyName));
+            if (!string.IsNullOrEmpty(lsCompany))
+            {
+                loQBData.CompanyName.SetValue(lsCompany);
+            }
+
+            loQBData.Email.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.Email)));
+
+            string lsFirstName = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.FirstName));
+
+            if (!string.IsNullOrEmpty(lsFirstName))
+            {
+                loQBData.FirstName.SetValue(lsFirstName);
+            }
+
+            string lsLastName = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.LastName));
+            if (!string.IsNullOrEmpty(lsLastName))
+            {
+                loQBData.LastName.SetValue(lsLastName);
+            }
+
+            string lsAccountNumber = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.AccountNumber));
+
+            if (!string.IsNullOrEmpty(lsAccountNumber))
+            {
+                loQBData.AccountNumber.SetValue(lsAccountNumber);
+            }
+
+            loQBData.Name.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.Name)));
+
+            string lsBillingAddress = loData.Get(loDataModel.BillAddress) as string;
+            if (!string.IsNullOrEmpty(lsBillingAddress))
+            {
+                MaxIndex loBillAddressIndex = MaxConvertLibrary.DeserializeObject(loData.Get(loDataModel.BillAddress) as string, typeof(MaxIndex)) as MaxIndex;
+                if (null != loBillAddressIndex)
+                {
+                    MapAddressContent(loQBData.BillAddress, loBillAddressIndex);
+                }
+            }
+
+            string lsShippingAddress = loData.Get(loDataModel.ShipAddress) as string;
+            if (!string.IsNullOrEmpty(lsShippingAddress))
+            {
+                MaxIndex loShipAddressIndex = MaxConvertLibrary.DeserializeObject(loData.Get(loDataModel.ShipAddress) as string, typeof(MaxIndex)) as MaxIndex;
+                if (null != loShipAddressIndex)
+                {
+                    MapAddressContent(loQBData.ShipAddress, loShipAddressIndex);
+                }
+            }
+
+            string lsSalesTax = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.ItemSalesTaxRef));
+            if (!string.IsNullOrEmpty(lsSalesTax))
+            {
+                loQBData.ItemSalesTaxRef.FullName.SetValue(lsSalesTax);
+            }
+
+            string lsTerms = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.TermsRef));
+            if (!string.IsNullOrEmpty(lsTerms))
+            {
+                loQBData.TermsRef.FullName.SetValue(lsTerms);
+            }
+        }
+
+
         private static void MapAddressContent(IAddress loQBData, MaxIndex loIndex)
         {
             MaxQBAddressDataModel loDataModel = new MaxQBAddressDataModel();
@@ -1162,7 +1335,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
 
             return loR;
         }
-
 
         private static void MapItemServiceContent(IItemServiceAdd loQBData, MaxData loData)
         {
@@ -1384,7 +1556,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
 
             return lbR;
         }
-
 
         /// <summary>
         /// Writes stream data to storage.
