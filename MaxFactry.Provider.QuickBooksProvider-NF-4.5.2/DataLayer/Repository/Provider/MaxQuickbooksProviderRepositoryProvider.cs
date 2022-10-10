@@ -364,6 +364,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     MaxQBInvoiceDataModel loDataModel = loData.DataModel as MaxQBInvoiceDataModel;
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
                     IInvoiceQuery loQuery = loRequest.AppendInvoiceQueryRq();
+                    loQuery.IncludeLineItems.SetValue(true);
 
                     string lsRefNumber = GetValue(loDataQuery, loDataModel.RefNumber) as string;
                     if (!string.IsNullOrEmpty(lsRefNumber))
@@ -509,7 +510,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 if (loData.DataModel is MaxQBInvoiceDataModel)
                 {
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    IInvoiceAdd loQBData = loRequest.AppendInvoiceAddRq();
+                    IInvoiceMod loQBData = loRequest.AppendInvoiceModRq();
                     MapInvoiceContent(loQBData, loData);
                     IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
                     if (null != loSetResponse)
@@ -523,7 +524,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                             }
                             else
                             {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBInvoiceDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
                             }
                         }
                     }
@@ -545,7 +546,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                             }
                             else
                             {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBCustomerDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
                             }
                         }
                     }
@@ -567,7 +568,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                             }
                             else
                             {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemServiceDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBItemServiceDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
                             }
                         }
                     }
@@ -589,7 +590,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                             }
                             else
                             {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemNonInventoryDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBItemNonInventoryDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
                             }
                         }
                     }
@@ -1024,6 +1025,9 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             loDataReturn.Set(loDataModel.EditSequence, GetAsString(loDetail.EditSequence));
             loDataReturn.Set(loDataModel.TimeCreated, GetAsDateTime(loDetail.TimeCreated));
             loDataReturn.Set(loDataModel.TimeModified, GetAsDateTime(loDetail.TimeModified));
+            loDataReturn.Set(loDataModel.TxnID, GetAsString(loDetail.TxnID));
+            loDataReturn.Set(loDataModel.TxnDate, GetAsDateTime(loDetail.TxnDate));
+            loDataReturn.Set(loDataModel.ExternalGUID, GetAsString(loDetail.ExternalGUID));
 
             if (null != loDetail.BillAddress)
             {
@@ -1044,9 +1048,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
 
 
-            loDataReturn.Set(loDataModel.ExternalGUID, GetAsString(loDetail.ExternalGUID));
-
-
             if (null != loDetail.ShipAddress)
             {
                 loDataReturn.Set(loDataModel.ShipAddress, MapAddressContent(loDetail.ShipAddress));
@@ -1063,6 +1064,27 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loShipAddressBlockIndex.Add(loShipAddressBlockDataModel.Addr5, GetAsString(loDetail.ShipAddressBlock.Addr5));
 
                 loDataReturn.Set(loDataModel.ShipAddressBlock, MaxConvertLibrary.SerializeObjectToString(loShipAddressBlockIndex));
+            }
+
+            if (null != loDetail.ORInvoiceLineRetList)
+            {
+                string[] laLine = new string[loDetail.ORInvoiceLineRetList.Count];
+                MaxQBInvoiceLineDataModel loLineDataModel = new MaxQBInvoiceLineDataModel();
+                for (int lnIL = 0; lnIL < loDetail.ORInvoiceLineRetList.Count; lnIL++)
+                {
+                    IORInvoiceLineRet loLine = loDetail.ORInvoiceLineRetList.GetAt(lnIL);
+                    MaxIndex loLineIndex = new MaxIndex();
+                    loLineIndex.Add(loLineDataModel.TxnLineID, GetAsString(loLine.InvoiceLineRet.TxnLineID));
+                    loLineIndex.Add(loLineDataModel.Quantity, GetAsDouble(loLine.InvoiceLineRet.Quantity));
+                    loLineIndex.Add(loLineDataModel.ItemRef, GetAsString(loLine.InvoiceLineRet.ItemRef.FullName));
+                    loLineIndex.Add(loLineDataModel.Desc, GetAsString(loLine.InvoiceLineRet.Desc));
+                    loLineIndex.Add(loLineDataModel.ORRatePriceLevel, GetAsDouble(loLine.InvoiceLineRet.ORRate.Rate));
+                    loLineIndex.Add(loLineDataModel.Amount, GetAsDouble(loLine.InvoiceLineRet.Amount));
+                    loLineIndex.Add(loLineDataModel.SalesTaxCodeRef, GetAsString(loLine.InvoiceLineRet.SalesTaxCodeRef.FullName));
+                    laLine[lnIL] = MaxConvertLibrary.SerializeObjectToString(loLineIndex);
+                }
+
+                loDataReturn.Set(loDataModel.ORInvoiceLineAddList, MaxConvertLibrary.SerializeObjectToString(laLine));
             }
 
             return loDataReturn;
@@ -1155,6 +1177,118 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loItem.InvoiceLineAdd.Amount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.Amount)));
                 loItem.InvoiceLineAdd.SalesTaxCodeRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loItemIndex.GetValueString(loItemDataModel.SalesTaxCodeRef)));
             }
+        }
+
+        private static void MapInvoiceContent(IInvoiceMod loQBData, MaxData loData)
+        {
+            MaxQBInvoiceDataModel loDataModel = loData.DataModel as MaxQBInvoiceDataModel;
+
+            string lsEditSequence = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.EditSequence));
+            loQBData.EditSequence.SetValue(lsEditSequence);
+
+            string lsTxnId = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.TxnID));
+            loQBData.TxnID.SetValue(lsTxnId);
+
+            if (null != loData.Get(loDataModel.CustomerRef))
+            {
+                loQBData.CustomerRef.ListID.SetValue(loData.Get(loDataModel.CustomerRef) as string);
+            }
+
+            loQBData.TxnDate.SetValue(MaxConvertLibrary.ConvertToDateTime(typeof(object), loData.Get(loDataModel.TxnDate)));
+
+            loQBData.RefNumber.SetValue(loData.Get(loDataModel.RefNumber) as string);
+            loQBData.Memo.SetValue(loData.Get(loDataModel.Memo) as string);
+
+
+            string lsPONumber = loData.Get(loDataModel.PONumber) as string;
+            if (!string.IsNullOrEmpty(lsPONumber))
+            {
+                loQBData.PONumber.SetValue(lsPONumber);
+            }
+
+            string lsBillAddress = loData.Get(loDataModel.BillAddress) as string;
+            if (!string.IsNullOrEmpty(lsBillAddress))
+            {
+                MaxIndex loBillAddressIndex = MaxConvertLibrary.DeserializeObject(lsBillAddress, typeof(MaxIndex)) as MaxIndex;
+                if (null != loBillAddressIndex)
+                {
+                    MapAddressContent(loQBData.BillAddress, loBillAddressIndex);
+                }
+            }
+
+            string lsShipAddress = loData.Get(loDataModel.ShipAddress) as string;
+            if (!string.IsNullOrEmpty(lsShipAddress))
+            {
+                MaxIndex loShipAddressIndex = MaxConvertLibrary.DeserializeObject(lsShipAddress, typeof(MaxIndex)) as MaxIndex;
+                if (null != loShipAddressIndex)
+                {
+                    MapAddressContent(loQBData.ShipAddress, loShipAddressIndex);
+                }
+            }
+
+            string lsTermsRef = loData.Get(loDataModel.TermsRef) as string;
+            if (!string.IsNullOrEmpty(lsTermsRef))
+            {
+                MaxIndex loTermsIndex = MaxConvertLibrary.DeserializeObject(lsTermsRef, typeof(MaxIndex)) as MaxIndex;
+                if (null != loTermsIndex)
+                {
+                    MapRefContent(loQBData.TermsRef, loTermsIndex);
+                }
+            }
+
+            string lsCustomerSalesTaxCodeRef = loData.Get(loDataModel.CustomerSalesTaxCodeRef) as string;
+            if (!string.IsNullOrEmpty(lsCustomerSalesTaxCodeRef))
+            {
+                loQBData.CustomerSalesTaxCodeRef.FullName.SetValue(lsCustomerSalesTaxCodeRef);
+            }
+
+            string lsItemSalesTaxRef = loData.Get(loDataModel.ItemSalesTaxRef) as string;
+            if (!string.IsNullOrEmpty(lsItemSalesTaxRef))
+            {
+                loQBData.ItemSalesTaxRef.FullName.SetValue(loData.Get(loDataModel.ItemSalesTaxRef) as string);
+            }
+
+            //loQBData.DueDate.SetValue(MaxConvertLibrary.ConvertToDateTime(typeof(object), loData.Get(loDataModel.DueDate)));
+
+            //loQBData.CustomerMsgRef.FullName.SetValue(loData.Get(loDataModel.CustomerMsgRef) as string);
+
+            //loQBData.ExchangeRate.SetValue(Convert.ToSingle(MaxConvertLibrary.ConvertToDouble(typeof(object), loData.Get(loDataModel.ExchangeRate))));
+
+
+            string[] laItem = MaxConvertLibrary.DeserializeObject(loData.Get(loDataModel.ORInvoiceLineAddList) as string, typeof(string[])) as string[];
+            MaxQBInvoiceLineDataModel loItemDataModel = new MaxQBInvoiceLineDataModel();
+            for (int lnI = 0; lnI < laItem.Length; lnI++)
+            {
+                MaxIndex loItemIndex = MaxConvertLibrary.DeserializeObject(laItem[lnI], typeof(MaxIndex)) as MaxIndex;
+                string lsTxnLineId = loItemIndex.GetValueString(loItemDataModel.TxnLineID);
+                IORInvoiceLineMod loItem = loQBData.ORInvoiceLineModList.Append();
+                if (!string.IsNullOrEmpty(lsTxnLineId))
+                {
+                    loItem.InvoiceLineMod.TxnLineID.SetValue(lsTxnLineId);
+                }
+                else
+                {
+                    loItem.InvoiceLineMod.TxnLineID.SetValue("-1");
+                }
+
+                //// TODO: Full Name or ListID of an item?
+                if (null != loItemIndex[loItemDataModel.ItemRef])
+                {
+                    loItem.InvoiceLineMod.ItemRef.FullName.SetValue(loItemIndex.GetValueString(loItemDataModel.ItemRef));
+                }
+
+                loItem.InvoiceLineMod.Desc.SetValue(loItemIndex.GetValueString(loItemDataModel.Desc));
+                string lsQuantity = loItemIndex.GetValueString(loItemDataModel.Quantity);
+                if (!string.IsNullOrEmpty(lsQuantity))
+                {
+                    loItem.InvoiceLineMod.Quantity.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), lsQuantity));
+                }
+
+                loItem.InvoiceLineMod.ORRatePriceLevel.Rate.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.ORRatePriceLevel)));
+                loItem.InvoiceLineMod.Amount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.Amount)));
+                loItem.InvoiceLineMod.SalesTaxCodeRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loItemIndex.GetValueString(loItemDataModel.SalesTaxCodeRef)));
+            }
+            
         }
 
         private static void MapCustomerContent(ICustomerAdd loQBData, MaxData loData)
@@ -1306,12 +1440,36 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
         {
             MaxQBAddressDataModel loDataModel = new MaxQBAddressDataModel();
             loQBData.Addr1.SetValue(loIndex.GetValueString(loDataModel.Addr1));
-            loQBData.Addr2.SetValue(loIndex.GetValueString(loDataModel.Addr2));
-            loQBData.Addr3.SetValue(loIndex.GetValueString(loDataModel.Addr3));
-            loQBData.Addr4.SetValue(loIndex.GetValueString(loDataModel.Addr4));
-            loQBData.Addr5.SetValue(loIndex.GetValueString(loDataModel.Addr5));
+            string lsAddr2 = loIndex.GetValueString(loDataModel.Addr2);
+            if (!string.IsNullOrEmpty(lsAddr2))
+            {
+                loQBData.Addr2.SetValue(lsAddr2);
+            }
+
+            string lsAddr3 = loIndex.GetValueString(loDataModel.Addr3);
+            if (!string.IsNullOrEmpty(lsAddr3))
+            {
+                loQBData.Addr3.SetValue(lsAddr3);
+            }
+
+            string lsAddr4 = loIndex.GetValueString(loDataModel.Addr4);
+            if (!string.IsNullOrEmpty(lsAddr4))
+            {
+                loQBData.Addr4.SetValue(lsAddr4);
+            }
+            string lsAddr5 = loIndex.GetValueString(loDataModel.Addr5);
+            if (!string.IsNullOrEmpty(lsAddr5))
+            {
+                loQBData.Addr5.SetValue(lsAddr5);
+            }
+
             loQBData.City.SetValue(loIndex.GetValueString(loDataModel.City));
-            loQBData.Country.SetValue(loIndex.GetValueString(loDataModel.Country));
+            string lsCountry = loIndex.GetValueString(loDataModel.Country);
+            if (!string.IsNullOrEmpty(lsCountry))
+            {
+                loQBData.Country.SetValue(lsCountry);
+            }
+
             loQBData.PostalCode.SetValue(loIndex.GetValueString(loDataModel.PostalCode));
             loQBData.State.SetValue(loIndex.GetValueString(loDataModel.State));
         }
@@ -1537,6 +1695,20 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 if (((IQBAmountType)loQBObject).IsSet())
                 {
                     lnR = ((IQBAmountType)loQBObject).GetValue();
+                }
+            }
+            else if (loQBObject is IQBQuanType)
+            {
+                if (((IQBQuanType)loQBObject).IsSet())
+                {
+                    lnR = ((IQBQuanType)loQBObject).GetValue();
+                }
+            }
+            else if (loQBObject is IQBPriceType)
+            {
+                if (((IQBPriceType)loQBObject).IsSet())
+                {
+                    lnR = ((IQBPriceType)loQBObject).GetValue();
                 }
             }
 
