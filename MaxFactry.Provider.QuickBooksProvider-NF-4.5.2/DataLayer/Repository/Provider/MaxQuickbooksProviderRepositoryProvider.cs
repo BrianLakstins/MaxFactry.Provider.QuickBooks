@@ -1081,6 +1081,8 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     loLineIndex.Add(loLineDataModel.ORRatePriceLevel, GetAsDouble(loLine.InvoiceLineRet.ORRate.Rate));
                     loLineIndex.Add(loLineDataModel.Amount, GetAsDouble(loLine.InvoiceLineRet.Amount));
                     loLineIndex.Add(loLineDataModel.SalesTaxCodeRef, GetAsString(loLine.InvoiceLineRet.SalesTaxCodeRef.FullName));
+                    loLineIndex.Add(loLineDataModel.Other1, GetAsString(loLine.InvoiceLineRet.Other1));
+                    loLineIndex.Add(loLineDataModel.Other2, GetAsString(loLine.InvoiceLineRet.Other2));
                     laLine[lnIL] = MaxConvertLibrary.SerializeObjectToString(loLineIndex);
                 }
 
@@ -1176,6 +1178,8 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loItem.InvoiceLineAdd.ORRatePriceLevel.Rate.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.ORRatePriceLevel)));
                 loItem.InvoiceLineAdd.Amount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.Amount)));
                 loItem.InvoiceLineAdd.SalesTaxCodeRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loItemIndex.GetValueString(loItemDataModel.SalesTaxCodeRef)));
+                loItem.InvoiceLineAdd.Other1.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loItemIndex.GetValueString(loItemDataModel.Other1)));
+                loItem.InvoiceLineAdd.Other2.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loItemIndex.GetValueString(loItemDataModel.Other2)));
             }
         }
 
@@ -1287,8 +1291,9 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loItem.InvoiceLineMod.ORRatePriceLevel.Rate.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.ORRatePriceLevel)));
                 loItem.InvoiceLineMod.Amount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.Amount)));
                 loItem.InvoiceLineMod.SalesTaxCodeRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loItemIndex.GetValueString(loItemDataModel.SalesTaxCodeRef)));
+                loItem.InvoiceLineMod.Other1.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loItemIndex.GetValueString(loItemDataModel.Other1)));
+                loItem.InvoiceLineMod.Other2.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loItemIndex.GetValueString(loItemDataModel.Other2)));
             }
-            
         }
 
         private static void MapCustomerContent(ICustomerAdd loQBData, MaxData loData)
