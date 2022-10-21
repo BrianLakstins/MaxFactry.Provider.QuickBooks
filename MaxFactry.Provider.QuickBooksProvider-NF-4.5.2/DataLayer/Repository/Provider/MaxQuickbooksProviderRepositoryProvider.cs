@@ -283,7 +283,8 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 {
                     MaxQBItemDataModel loDataModel = loData.DataModel as MaxQBItemDataModel;
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    loRequest.AppendItemQueryRq();
+                    IItemQuery loQuery = loRequest.AppendItemQueryRq();
+
                     IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
                     if (null != loSetResponse)
                     {
@@ -309,28 +310,121 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 {
                     MaxQBItemNonInventoryDataModel loDataModel = loData.DataModel as MaxQBItemNonInventoryDataModel;
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    loRequest.AppendItemNonInventoryQueryRq();
+                    IItemNonInventoryQuery loQuery = loRequest.AppendItemNonInventoryQueryRq();
+
+                    string lsFullName = GetValue(loDataQuery, loDataModel.FullName) as string;
+                    if (!string.IsNullOrEmpty(lsFullName))
+                    {
+                        loQuery.ORListQueryWithOwnerIDAndClass.FullNameList.Add(lsFullName);
+                    }
+
                     IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
                     if (null != loSetResponse)
                     {
                         if (loSetResponse.ResponseList.Count == 1)
                         {
                             IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            IItemNonInventoryRetList loList = loResponse.Detail as IItemNonInventoryRetList;
-                            if (null != loList && loList.Count > 0)
+                            if (loResponse.StatusCode == 0)
                             {
-                                MaxDataList loR = new MaxDataList(loDataModel);
-                                for (int lnL = 0; lnL < loList.Count; lnL++)
+                                IItemNonInventoryRetList loList = loResponse.Detail as IItemNonInventoryRetList;
+                                if (null != loList && loList.Count > 0)
                                 {
-                                    loR.Add(MapItemNonInventoryContent(loList.GetAt(lnL)));
-                                }
+                                    MaxDataList loR = new MaxDataList(loDataModel);
+                                    for (int lnL = 0; lnL < loList.Count; lnL++)
+                                    {
+                                        loR.Add(MapItemNonInventoryContent(loList.GetAt(lnL)));
+                                    }
 
-                                lnTotal = loR.Count;
-                                return loR;
+                                    lnTotal = loR.Count;
+                                    return loR;
+                                }
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
                             }
                         }
                     }
+                }
+                else if (loData.DataModel is MaxQBItemOtherChargeDataModel)
+                {
+                    MaxQBItemOtherChargeDataModel loDataModel = loData.DataModel as MaxQBItemOtherChargeDataModel;
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    IItemOtherChargeQuery loQuery = loRequest.AppendItemOtherChargeQueryRq();
 
+                    string lsFullName = GetValue(loDataQuery, loDataModel.FullName) as string;
+                    if (!string.IsNullOrEmpty(lsFullName))
+                    {
+                        loQuery.ORListQueryWithOwnerIDAndClass.FullNameList.Add(lsFullName);
+                    }
+
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            if (loResponse.StatusCode == 0)
+                            {
+                                IItemOtherChargeRetList loList = loResponse.Detail as IItemOtherChargeRetList;
+                                if (null != loList && loList.Count > 0)
+                                {
+                                    MaxDataList loR = new MaxDataList(loDataModel);
+                                    for (int lnL = 0; lnL < loList.Count; lnL++)
+                                    {
+                                        loR.Add(MapItemOtherChargeContent(loList.GetAt(lnL)));
+                                    }
+
+                                    lnTotal = loR.Count;
+                                    return loR;
+                                }
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
+                            }
+                        }
+                    }
+                }
+                else if (loData.DataModel is MaxQBItemServiceDataModel)
+                {
+                    MaxQBItemServiceDataModel loDataModel = loData.DataModel as MaxQBItemServiceDataModel;
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    IItemServiceQuery loQuery = loRequest.AppendItemServiceQueryRq();
+
+                    string lsFullName = GetValue(loDataQuery, loDataModel.FullName) as string;
+                    if (!string.IsNullOrEmpty(lsFullName))
+                    {
+                        loQuery.ORListQueryWithOwnerIDAndClass.FullNameList.Add(lsFullName);
+                    }
+
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            if (loResponse.StatusCode == 0)
+                            {
+                                IItemServiceRetList loList = loResponse.Detail as IItemServiceRetList;
+                                if (null != loList && loList.Count > 0)
+                                {
+                                    MaxDataList loR = new MaxDataList(loDataModel);
+                                    for (int lnL = 0; lnL < loList.Count; lnL++)
+                                    {
+                                        loR.Add(MapItemServiceContent(loList.GetAt(lnL)));
+                                    }
+
+                                    lnTotal = loR.Count;
+                                    return loR;
+                                }
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
+                            }
+                        }
+                    }
                 }
                 else if (loData.DataModel is MaxQBStandardTermsDataModel)
                 {
@@ -380,19 +474,26 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                         {
                             IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
                             IInvoiceRetList loList = loResponse.Detail as IInvoiceRetList;
-                            if (null != loList)
+                            if (loResponse.StatusCode == 0)
                             {
-                                if (null != loList && loList.Count > 0)
+                                if (null != loList)
                                 {
-                                    MaxDataList loR = new MaxDataList(loDataModel);
-                                    for (int lnL = 0; lnL < loList.Count; lnL++)
+                                    if (null != loList && loList.Count > 0)
                                     {
-                                        loR.Add(MapInvoiceContent(loList.GetAt(lnL)));
-                                    }
+                                        MaxDataList loR = new MaxDataList(loDataModel);
+                                        for (int lnL = 0; lnL < loList.Count; lnL++)
+                                        {
+                                            loR.Add(MapInvoiceContent(loList.GetAt(lnL)));
+                                        }
 
-                                    lnTotal = loR.Count;
-                                    return loR;
+                                        lnTotal = loR.Count;
+                                        return loR;
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
                             }
                         }
                     }
@@ -938,6 +1039,50 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
 
             
+            return loR;
+        }
+
+        private static MaxData MapItemOtherChargeContent(IItemOtherChargeRet loDetail)
+        {
+            MaxQBItemOtherChargeDataModel loDataModel = new MaxQBItemOtherChargeDataModel();
+            MaxData loR = new MaxData(loDataModel);
+            loR.Set(loDataModel.ListID, GetAsString(loDetail.ListID));
+            loR.Set(loDataModel.TimeCreated, GetAsDateTime(loDetail.TimeCreated));
+            loR.Set(loDataModel.TimeModified, GetAsDateTime(loDetail.TimeModified));
+            loR.Set(loDataModel.EditSequence, GetAsString(loDetail.EditSequence));
+
+            loR.Set(loDataModel.Name, GetAsString(loDetail.Name));
+            loR.Set(loDataModel.FullName, GetAsString(loDetail.FullName));
+            loR.Set(loDataModel.BarCodeValue, GetAsString(loDetail.BarCodeValue));
+            loR.Set(loDataModel.IsActive, GetAsBool(loDetail.IsActive));
+
+            loR.Set(loDataModel.ParentRef, MapRefContent(loDetail.ParentRef));
+
+            loR.Set(loDataModel.ExternalGUID, GetAsString(loDetail.ExternalGUID));
+            loR.Set(loDataModel.IsTaxIncluded, GetAsBool(loDetail.IsTaxIncluded));
+            loR.Set(loDataModel.Sublevel, GetAsInt(loDetail.Sublevel));
+            return loR;
+        }
+
+        private static MaxData MapItemServiceContent(IItemServiceRet loDetail)
+        {
+            MaxQBItemServiceDataModel loDataModel = new MaxQBItemServiceDataModel();
+            MaxData loR = new MaxData(loDataModel);
+            loR.Set(loDataModel.ListID, GetAsString(loDetail.ListID));
+            loR.Set(loDataModel.TimeCreated, GetAsDateTime(loDetail.TimeCreated));
+            loR.Set(loDataModel.TimeModified, GetAsDateTime(loDetail.TimeModified));
+            loR.Set(loDataModel.EditSequence, GetAsString(loDetail.EditSequence));
+
+            loR.Set(loDataModel.Name, GetAsString(loDetail.Name));
+            loR.Set(loDataModel.FullName, GetAsString(loDetail.FullName));
+            loR.Set(loDataModel.BarCodeValue, GetAsString(loDetail.BarCodeValue));
+            loR.Set(loDataModel.IsActive, GetAsBool(loDetail.IsActive));
+
+            loR.Set(loDataModel.ParentRef, MapRefContent(loDetail.ParentRef));
+
+            loR.Set(loDataModel.ExternalGUID, GetAsString(loDetail.ExternalGUID));
+            loR.Set(loDataModel.IsTaxIncluded, GetAsBool(loDetail.IsTaxIncluded));
+            loR.Set(loDataModel.Sublevel, GetAsInt(loDetail.Sublevel));
             return loR;
         }
 

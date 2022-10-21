@@ -1,4 +1,4 @@
-﻿// <copyright file="MaxQBItemNonInventoryEntity.cs" company="Lakstins Family, LLC">
+﻿// <copyright file="MaxQBItemOtherChargeEntity.cs" company="Lakstins Family, LLC">
 // Copyright (c) Brian A. Lakstins (http://www.lakstins.com/brian/)
 // </copyright>
 
@@ -40,14 +40,14 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
     using MaxFactry.Base.DataLayer;
     using MaxFactry.Provider.QuickbooksProvider.DataLayer;
 
-    public class MaxQBItemNonInventoryEntity : MaxQBBaseEntity
+    public class MaxQBItemOtherChargeEntity : MaxQBBaseEntity
     {
 
 		/// <summary>
         /// Initializes a new instance of the MaxCartEntity class
 		/// </summary>
 		/// <param name="loData">object to hold data</param>
-		public MaxQBItemNonInventoryEntity(MaxData loData) : base(loData)
+		public MaxQBItemOtherChargeEntity(MaxData loData) : base(loData)
 		{
 		}
 
@@ -55,7 +55,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
         /// Initializes a new instance of the MaxCartEntity class.
         /// </summary>
         /// <param name="loDataModelType">Type of data model.</param>
-        public MaxQBItemNonInventoryEntity(Type loDataModelType)
+        public MaxQBItemOtherChargeEntity(Type loDataModelType)
             : base(loDataModelType)
         {
         }
@@ -151,19 +151,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             }
         }
 
-        public string ManufacturerPartNumber
-        {
-            get
-            {
-                return this.GetString(this.DataModel.ManufacturerPartNumber);
-            }
-
-            set
-            {
-                this.Set(this.DataModel.ManufacturerPartNumber, value.Substring(0, Math.Min(value.Length, 31)));
-            }
-        }
-
         public MaxQBBaseRefEntity ParentRef
         {
             get
@@ -240,54 +227,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             }
         }
 
-        public MaxQBORSalesAndPurchaseEntity ORSalesAndPurchase
-        {
-            get
-            {
-                MaxQBORSalesAndPurchaseEntity loR = MaxQBORSalesAndPurchaseEntity.Create();
-                object loData = this.Get(this.DataModel.ORSalesAndPurchase);
-                if (loData is MaxData)
-                {
-                    loR.Load(loData as MaxData);
-                }
-                else if (loData is string)
-                {
-                    loR.Load(loData as string);
-                }
-
-                return loR;
-            }
-
-            set
-            {
-                Set(this.DataModel.ORSalesAndPurchase, value.ExportToString());
-            }
-        }
-
-        public MaxQBORSalesOrPurchaseEntity ORSalesOrPurchase
-        {
-            get
-            {
-                MaxQBORSalesOrPurchaseEntity loR = MaxQBORSalesOrPurchaseEntity.Create();
-                object loData = this.Get(this.DataModel.ORSalesOrPurchase);
-                if (loData is MaxData)
-                {
-                    loR.Load(loData as MaxData);
-                }
-                else if (loData is string)
-                {
-                    loR.Load(loData as string);
-                }
-
-                return loR;
-            }
-
-            set
-            {
-                Set(this.DataModel.ORSalesOrPurchase, value.ExportToString());
-            }
-        }
-
         public Guid ExternalGUID
         {
             get
@@ -314,35 +253,23 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             }
         }
 
-        public string IncludeRetElementList
-        {
-            get
-            {
-                return this.GetString(this.DataModel.IncludeRetElementList);
-            }
-
-            set
-            {
-                this.Set(this.DataModel.IncludeRetElementList, value);
-            }
-        }
 
         /// <summary>
         /// Gets the Data Model for this entity
         /// </summary>
-        protected MaxQBItemNonInventoryDataModel DataModel
+        protected MaxQBItemOtherChargeDataModel DataModel
         {
             get
             {
-                return (MaxQBItemNonInventoryDataModel)MaxDataLibrary.GetDataModel(this.DataModelType);
+                return (MaxQBItemOtherChargeDataModel)MaxDataLibrary.GetDataModel(this.DataModelType);
             }
         }
 
-        public static MaxQBItemNonInventoryEntity Create()
+        public static MaxQBItemOtherChargeEntity Create()
         {
             return MaxBusinessLibrary.GetEntity(
-                typeof(MaxQBItemNonInventoryEntity),
-                typeof(MaxQBItemNonInventoryDataModel)) as MaxQBItemNonInventoryEntity;
+                typeof(MaxQBItemOtherChargeEntity),
+                typeof(MaxQBItemOtherChargeDataModel)) as MaxQBItemOtherChargeEntity;
         }
 
         public MaxEntityList LoadAllQBDesktopByFullName(string lsFullName)
