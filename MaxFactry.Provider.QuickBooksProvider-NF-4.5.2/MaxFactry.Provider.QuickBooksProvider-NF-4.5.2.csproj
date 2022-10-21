@@ -38,26 +38,13 @@
     <AssemblyOriginatorKeyFile>MaxFactry.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.QBFC15, Version=15.0.0.1, Culture=neutral, PublicKeyToken=31d8aec643e18259, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>..\_references\Interop.QBFC15.dll</HintPath>
-    </Reference>
-    <Reference Include="MaxFactry.Base-NF-4.5.2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
-      <HintPath>..\..\_nuget\MaxFactry.General.1.0.1\lib\net452\MaxFactry.Base-NF-4.5.2.dll</HintPath>
-    </Reference>
-    <Reference Include="MaxFactry.Core-NF-4.5.2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
-      <HintPath>..\..\_nuget\MaxFactry.General.1.0.1\lib\net452\MaxFactry.Core-NF-4.5.2.dll</HintPath>
-    </Reference>
-    <Reference Include="MaxFactry.General-NF-4.5.2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=fbbc3eafbb4c95f8, processorArchitecture=MSIL">
-      <HintPath>..\..\_nuget\MaxFactry.General.1.0.1\lib\net452\MaxFactry.General-NF-4.5.2.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessLayer\Entity\MaxQBItemDiscountEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBItemOtherChargeEntity.cs" />
     <Compile Include="BusinessLayer\Entity\MaxQBStandardTermsEntity.cs" />
     <Compile Include="BusinessLayer\Entity\MaxQBInvoiceLineEntity.cs" />
     <Compile Include="BusinessLayer\Entity\MaxQBORSalesOrPurchaseEntity.cs" />
@@ -136,7 +123,6 @@
     <None Include="app.config" />
     <None Include="MaxFactry.pfx" />
     <None Include="MaxFactry.snk" />
-    <None Include="packages.config" />
     <None Include="QBSDK_ProGuide.pdf" />
     <None Include="QBWC_proguide.pdf" />
   </ItemGroup>
@@ -152,6 +138,20 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="PresentationLayer\Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Interop.QBFC15">
+      <Version>1.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="MaxFactry.Base">
+      <Version>1.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="MaxFactry.Core">
+      <Version>1.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="MaxFactry.General">
+      <Version>1.0.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
