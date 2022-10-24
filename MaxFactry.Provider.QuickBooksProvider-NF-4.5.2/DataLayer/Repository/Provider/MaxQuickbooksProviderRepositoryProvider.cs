@@ -262,19 +262,26 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                         {
                             IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
                             ICustomerRetList loList = loResponse.Detail as ICustomerRetList;
-                            if (null != loList)
+                            if (loResponse.StatusCode == 0)
                             {
-                                if (null != loList && loList.Count > 0)
+                                if (null != loList)
                                 {
-                                    MaxDataList loR = new MaxDataList(loDataModel);
-                                    for (int lnL = 0; lnL < loList.Count; lnL++)
+                                    if (null != loList && loList.Count > 0)
                                     {
-                                        loR.Add(MapCustomerContent(loList.GetAt(lnL)));
-                                    }
+                                        MaxDataList loR = new MaxDataList(loDataModel);
+                                        for (int lnL = 0; lnL < loList.Count; lnL++)
+                                        {
+                                            loR.Add(MapCustomerContent(loList.GetAt(lnL)));
+                                        }
 
-                                    lnTotal = loR.Count;
-                                    return loR;
+                                        lnTotal = loR.Count;
+                                        return loR;
+                                    }
                                 }
+                            }
+                            else if (string.IsNullOrEmpty(lsFullName))
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
                             }
                         }
                     }
@@ -339,7 +346,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                     return loR;
                                 }
                             }
-                            else
+                            else if (string.IsNullOrEmpty(lsFullName))
                             {
                                 MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
                             }
@@ -379,7 +386,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                     return loR;
                                 }
                             }
-                            else
+                            else if (string.IsNullOrEmpty(lsFullName))
                             {
                                 MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
                             }
@@ -491,7 +498,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                     }
                                 }
                             }
-                            else
+                            else if (string.IsNullOrEmpty(lsRefNumber))
                             {
                                 MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
                             }
