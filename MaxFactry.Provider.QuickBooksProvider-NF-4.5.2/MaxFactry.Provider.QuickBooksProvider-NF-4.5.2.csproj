@@ -144,13 +144,13 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Base">
-      <Version>1.0.3</Version>
+      <Version>1.0.10</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Core">
-      <Version>1.0.3</Version>
+      <Version>1.0.4</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.General">
-      <Version>1.0.3</Version>
+      <Version>1.0.4</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

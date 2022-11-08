@@ -77,7 +77,14 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
         {
             get
             {
-                return this.GetString(this.DataModel.ItemRef);
+                string lsR = this.GetString(this.DataModel.ItemRef);
+                int lnMaxLength = 31;
+                if (lsR.Length > lnMaxLength)
+                {
+                    lsR = lsR.Substring(0, lnMaxLength);
+                }
+
+                return lsR;
             }
 
             set

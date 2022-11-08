@@ -1324,7 +1324,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 string lsQuantity = loItemIndex.GetValueString(loItemDataModel.Quantity);
                 if (!string.IsNullOrEmpty(lsQuantity))
                 {
-                    loItem.InvoiceLineAdd.Quantity.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), lsQuantity));
+                    double lnQuantity = MaxConvertLibrary.ConvertToDouble(typeof(object), lsQuantity);
+                    if (lnQuantity > 0)
+                    {
+                        loItem.InvoiceLineAdd.Quantity.SetValue(lnQuantity);
+                    }
                 }
 
                 loItem.InvoiceLineAdd.ORRatePriceLevel.Rate.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.ORRatePriceLevel)));
@@ -1437,7 +1441,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 string lsQuantity = loItemIndex.GetValueString(loItemDataModel.Quantity);
                 if (!string.IsNullOrEmpty(lsQuantity))
                 {
-                    loItem.InvoiceLineMod.Quantity.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), lsQuantity));
+                    double lnQuantity = MaxConvertLibrary.ConvertToDouble(typeof(object), lsQuantity);
+                    if (lnQuantity > 0)
+                    {
+                        loItem.InvoiceLineMod.Quantity.SetValue(lnQuantity);
+                    }
                 }
 
                 loItem.InvoiceLineMod.ORRatePriceLevel.Rate.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loItemIndex.GetValueString(loItemDataModel.ORRatePriceLevel)));
