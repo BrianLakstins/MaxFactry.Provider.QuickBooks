@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="BusinessLayer\Entity\MaxQBItemDiscountEntity.cs" />
     <Compile Include="BusinessLayer\Entity\MaxQBItemOtherChargeEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBAppliedToTxnEntity.cs" />
+    <Compile Include="BusinessLayer\Entity\MaxQBReceivePaymentEntity.cs" />
     <Compile Include="BusinessLayer\Entity\MaxQBStandardTermsEntity.cs" />
     <Compile Include="BusinessLayer\Entity\MaxQBInvoiceLineEntity.cs" />
     <Compile Include="BusinessLayer\Entity\MaxQBORSalesOrPurchaseEntity.cs" />
@@ -67,6 +69,8 @@
     <Compile Include="BusinessLayer\Structure\MaxQBIAddressStructure.cs" />
     <Compile Include="BusinessLayer\Structure\MaxQBIContactsRetStructure.cs" />
     <Compile Include="BusinessLayer\Structure\MaxQBIQBBaseRefStructure.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBAppliedToTxn.cs" />
+    <Compile Include="DataLayer\DataModel\MaxQBReceivePaymentDataModel.cs" />
     <Compile Include="DataLayer\DataModel\MaxQBStandardTermsDataModel.cs" />
     <Compile Include="DataLayer\DataModel\MaxQBORSalesOrPurchaseDataModel.cs" />
     <Compile Include="DataLayer\DataModel\MaxQBORSalesAndPurchaseDataModel.cs" />
@@ -144,13 +148,13 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Base">
-      <Version>1.0.10</Version>
+      <Version>1.0.11</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Core">
-      <Version>1.0.4</Version>
+      <Version>1.0.6</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.General">
-      <Version>1.0.4</Version>
+      <Version>1.0.9</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

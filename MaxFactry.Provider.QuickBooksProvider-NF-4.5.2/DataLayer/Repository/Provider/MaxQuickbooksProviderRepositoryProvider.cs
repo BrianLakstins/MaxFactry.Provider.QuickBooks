@@ -505,6 +505,50 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                         }
                     }
                 }
+                else if (loData.DataModel is MaxQBReceivePaymentDataModel)
+                {
+                    MaxQBReceivePaymentDataModel loDataModel = loData.DataModel as MaxQBReceivePaymentDataModel;
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    IReceivePaymentQuery loQuery = loRequest.AppendReceivePaymentQueryRq();
+                    loQuery.IncludeLineItems.SetValue(true);
+
+                    string lsRefNumber = GetValue(loDataQuery, loDataModel.RefNumber) as string;
+                    if (!string.IsNullOrEmpty(lsRefNumber))
+                    {
+                        loQuery.ORTxnQuery.RefNumberList.Add(lsRefNumber);
+                    }
+
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            IReceivePaymentRetList loList = loResponse.Detail as IReceivePaymentRetList;
+                            if (loResponse.StatusCode == 0)
+                            {
+                                if (null != loList)
+                                {
+                                    if (null != loList && loList.Count > 0)
+                                    {
+                                        MaxDataList loR = new MaxDataList(loDataModel);
+                                        for (int lnL = 0; lnL < loList.Count; lnL++)
+                                        {
+                                            loR.Add(MapReceivePaymentContent(loList.GetAt(lnL)));
+                                        }
+
+                                        lnTotal = loR.Count;
+                                        return loR;
+                                    }
+                                }
+                            }
+                            else if (string.IsNullOrEmpty(lsRefNumber))
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Select", MaxEnumGroup.LogError, "Error in response from QB {Code} {Severity} {Message} {Detail}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage, loResponse.Detail));
+                            }
+                        }
+                    }
+                }
             }
 
             return base.Select(loData, loDataQuery, lnPageIndex, lnPageSize, lsSort, out lnTotal, laFields);
@@ -599,6 +643,28 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                             else
                             {
                                 MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemNonInventoryDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                            }
+                        }
+                    }
+                }
+                else if (loData.DataModel is MaxQBReceivePaymentDataModel)
+                {
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    IReceivePaymentAdd loQBData = loRequest.AppendReceivePaymentAddRq();
+                    MapReceivePaymentContent(loQBData, loData, loRequest);
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            if (loResponse.StatusCode == 0)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBReceivePaymentDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
                             }
                         }
                     }
@@ -1657,6 +1723,177 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
 
             return loR;
+        }
+
+        private static MaxData MapReceivePaymentContent(IReceivePaymentRet loDetail)
+        {
+            MaxQBReceivePaymentDataModel loDataModel = new MaxQBReceivePaymentDataModel();
+            MaxData loR = new MaxData(loDataModel);
+            if (null != loDetail)
+            {
+                /*
+                loDetail.TimeCreated;
+                loDetail.TimeModified;
+                loDetail.EditSequence;
+                loDetail.TxnNumber;
+                loDetail.CustomerRef;
+                loDetail.CustomerRef.ListID;
+                loDetail.CustomerRef.FullName;
+                loDetail.ARAccountRef;
+                loDetail.ARAccountRef.ListID;
+                loDetail.ARAccountRef.FullName;
+                loDetail.TxnDate;
+                loR.Set(loDataModel.RefNumber, GetAsString(loDetail.RefNumber));
+                loDetail.TotalAmount;
+                loDetail.CurrencyRef;
+                loDetail.CurrencyRef.ListID;
+                loDetail.CurrencyRef.FullName;
+                loDetail.ExchangeRate;
+                loDetail.TotalAmountInHomeCurrency;
+                loDetail.PaymentMethodRef;
+                loDetail.PaymentMethodRef.ListID;
+                loDetail.PaymentMethodRef.FullName;
+                loDetail.Memo;
+                loDetail.DepositToAccountRef;
+                loDetail.DepositToAccountRef.ListID;
+                loDetail.DepositToAccountRef.FullName;
+                loDetail.CreditCardTxnInfo;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.CreditCardNumber;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.ExpirationMonth;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.ExpirationYear;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.NameOnCard;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.CreditCardAddress;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.CreditCardPostalCode;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.CommercialCardCode;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.TransactionMode;
+                loDetail.CreditCardTxnInfo.CreditCardTxnInputInfo.CreditCardTxnType;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.ResultCode;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.ResultMessage;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.CreditCardTransID;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.MerchantAccountNumber;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.AuthorizationCode;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.AVSStreet;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.AVSZip;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.CardSecurityCodeMatch;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.ReconBatchID;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.PaymentGroupingCode;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.PaymentStatus;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.TxnAuthorizationTime;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.TxnAuthorizationStamp;
+                loDetail.CreditCardTxnInfo.CreditCardTxnResultInfo.ClientTransID;
+                loDetail.UnusedPayment;
+                loDetail.UnusedCredits;
+                loDetail.ExternalGUID;
+                loDetail.AppliedToTxnRetList;
+                loDetail.AppliedToTxnRetList.GetAt(0).TxnID;
+                loDetail.AppliedToTxnRetList.GetAt(0).TxnType;
+                loDetail.AppliedToTxnRetList.GetAt(0).TxnDate;
+                loDetail.AppliedToTxnRetList.GetAt(0).RefNumber;
+                loDetail.AppliedToTxnRetList.GetAt(0).BalanceRemaining;
+                loDetail.AppliedToTxnRetList.GetAt(0).Amount;
+                loDetail.AppliedToTxnRetList.GetAt(0).DiscountAmount;
+                loDetail.AppliedToTxnRetList.GetAt(0).DiscountAccountRef;
+                loDetail.AppliedToTxnRetList.GetAt(0).DiscountAccountRef.ListID;
+                loDetail.AppliedToTxnRetList.GetAt(0).DiscountAccountRef.FullName;
+                loDetail.AppliedToTxnRetList.GetAt(0).DiscountClassRef;
+                loDetail.AppliedToTxnRetList.GetAt(0).DiscountClassRef.ListID;
+                loDetail.AppliedToTxnRetList.GetAt(0).DiscountClassRef.FullName;
+                loDetail.AppliedToTxnRetList.GetAt(0).LinkedTxnList;
+                loDetail.AppliedToTxnRetList.GetAt(0).LinkedTxnList.GetAt(0).TxnID;
+                loDetail.AppliedToTxnRetList.GetAt(0).LinkedTxnList.GetAt(0).TxnType;
+                loDetail.AppliedToTxnRetList.GetAt(0).LinkedTxnList.GetAt(0).TxnDate;
+                loDetail.AppliedToTxnRetList.GetAt(0).LinkedTxnList.GetAt(0).RefNumber;
+                loDetail.AppliedToTxnRetList.GetAt(0).LinkedTxnList.GetAt(0).LinkType;
+                loDetail.AppliedToTxnRetList.GetAt(0).LinkedTxnList.GetAt(0).Amount;
+                loDetail.DataExtRetList.GetAt(0).OwnerID;
+                loDetail.DataExtRetList.GetAt(0).DataExtName;
+                loDetail.DataExtRetList.GetAt(0).DataExtType;
+                loDetail.DataExtRetList.GetAt(0).DataExtValue;
+
+                */
+
+
+
+
+            }
+
+            return loR;
+        }
+
+        private static void MapReceivePaymentContent(IReceivePaymentAdd loQBData, MaxData loData, IMsgSetRequest loRequest)
+        {
+            MaxQBReceivePaymentDataModel loDataModel = new MaxQBReceivePaymentDataModel();
+            loQBData.CustomerRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.CustomerFullName)));
+
+            string lsARAccountRefFullName = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.ARAccountRefFullName));
+            if (!string.IsNullOrEmpty(lsARAccountRefFullName))
+            {
+                loQBData.ARAccountRef.FullName.SetValue(lsARAccountRefFullName);
+            }
+
+            loQBData.TxnDate.SetValue(MaxConvertLibrary.ConvertToDateTime(typeof(object), loData.Get(loDataModel.TxnDate)));
+            //loQBData.RefNumber.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.RefNumber)));
+            loQBData.TotalAmount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loData.Get(loDataModel.TotalAmount)));
+            //loQBData.ExchangeRate.SetValue(Convert.ToSingle(loData.Get(loDataModel.ExchangeRate)));
+            //loQBData.PaymentMethodRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.PaymentMethodRefFullName)));
+            //loQBData.Memo.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.Memo)));
+
+
+            string lsDepositToAccountRefFullName = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.DepositToAccountRefFullName));
+            if (!string.IsNullOrEmpty(lsDepositToAccountRefFullName))
+            {
+                loQBData.DepositToAccountRef.FullName.SetValue(lsDepositToAccountRefFullName);
+            }
+
+            //loQBData.CreditCardTxnInfo
+            Guid loExternalGuid = MaxConvertLibrary.ConvertToGuid(typeof(object), loData.Get(loDataModel.ExternalGUID));
+            if (Guid.Empty != loExternalGuid)
+            {
+                loQBData.ExternalGUID.SetValue(loExternalGuid.ToString());
+            }
+
+            loQBData.ORApplyPayment.IsAutoApply.SetValue(MaxConvertLibrary.ConvertToBoolean(typeof(object), loData.Get(loDataModel.IsAutoApply)));
+
+            MaxQBAppliedToTxnDataModel loDataModelTxn = new MaxQBAppliedToTxnDataModel();
+
+            MaxDataList loAppliedToTxnList = MaxConvertLibrary.DeserializeObject(typeof(object),
+                MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.AppliedToTxnListText)),
+                typeof(MaxDataList)) as MaxDataList;
+
+            if (null != loAppliedToTxnList)
+            {
+                for (int lnD = 0; lnD < loAppliedToTxnList.Count; lnD++)
+                {
+                    MaxData loAppliedToTxn = loAppliedToTxnList[lnD];
+                    IAppliedToTxnAdd loTxnAdd = loQBData.ORApplyPayment.AppliedToTxnAddList.Append();
+                    loTxnAdd.TxnID.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn.Get(loDataModelTxn.InvoiceTxnId)));
+                    loTxnAdd.PaymentAmount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loAppliedToTxn.Get(loDataModelTxn.PaymentAmount)));
+                    loTxnAdd.DiscountAmount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loAppliedToTxn.Get(loDataModelTxn.DiscountAmount)));
+                    loTxnAdd.DiscountAccountRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn.Get(loDataModelTxn.DiscountAccountRefFullName)));
+                    loTxnAdd.DiscountClassRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn.Get(loDataModelTxn.DiscountClassRefFullName)));
+                }
+            }
+
+            /*
+            ISetCredit loCredit = loTxnAdd.SetCreditList.Append();
+            loCredit.CreditTxnID.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.CreditTxnId)));
+            loCredit.AppliedAmount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loData.Get(loDataModel.AppliedAmount)));
+            loCredit.Override.SetValue(MaxConvertLibrary.ConvertToBoolean(typeof(object), loData.Get(loDataModel.Override)));
+            */
+
+            string[] laIncludeRetElementList = MaxConvertLibrary.DeserializeObject(typeof(object),
+                MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.IncludeRetElementListText)),
+                typeof(string[])) as string[];
+
+            if (null != laIncludeRetElementList)
+            {
+                foreach (string lsIncludeRetElementList in laIncludeRetElementList)
+                {
+                    loQBData.IncludeRetElementList.Add(lsIncludeRetElementList);
+                }
+            }
         }
 
         private static void MapItemServiceContent(IItemServiceAdd loQBData, MaxData loData)
