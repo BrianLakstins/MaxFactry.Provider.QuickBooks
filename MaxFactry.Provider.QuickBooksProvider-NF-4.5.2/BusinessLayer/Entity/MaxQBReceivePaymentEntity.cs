@@ -262,13 +262,13 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
         {
             if (null != this._oAppliedToTxnList)
             {
-                MaxDataList loDataList = new MaxDataList(new MaxQBAppliedToTxnDataModel());
+                MaxIndex loDataIndex = new MaxIndex();
                 foreach (MaxQBAppliedToTxnEntity loEntity in this._oAppliedToTxnList)
                 {
-                    loDataList.Add(loEntity.GetData());
+                    loDataIndex.Add(loEntity.GetDataIndex());
                 }
 
-                this.SetObject(this.DataModel.AppliedToTxnListText, loDataList);
+                this.SetObject(this.DataModel.AppliedToTxnListText, loDataIndex);
             }
 
             if (null != this._oIncludeRetElementList)

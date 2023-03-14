@@ -1853,26 +1853,35 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             {
                 loQBData.ExternalGUID.SetValue(loExternalGuid.ToString());
             }
-
-            loQBData.ORApplyPayment.IsAutoApply.SetValue(MaxConvertLibrary.ConvertToBoolean(typeof(object), loData.Get(loDataModel.IsAutoApply)));
+            bool lbIsAutoApply = MaxConvertLibrary.ConvertToBoolean(typeof(object), loData.Get(loDataModel.IsAutoApply));
+            if (lbIsAutoApply)
+            {
+                loQBData.ORApplyPayment.IsAutoApply.SetValue(lbIsAutoApply);
+            }
 
             MaxQBAppliedToTxnDataModel loDataModelTxn = new MaxQBAppliedToTxnDataModel();
 
-            MaxDataList loAppliedToTxnList = MaxConvertLibrary.DeserializeObject(typeof(object),
+            MaxIndex loAppliedToTxnIndex = MaxConvertLibrary.DeserializeObject(typeof(object),
                 MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.AppliedToTxnListText)),
-                typeof(MaxDataList)) as MaxDataList;
+                typeof(MaxIndex)) as MaxIndex;
 
-            if (null != loAppliedToTxnList)
+            if (null != loAppliedToTxnIndex)
             {
-                for (int lnD = 0; lnD < loAppliedToTxnList.Count; lnD++)
+                string[] laKey = loAppliedToTxnIndex.GetSortedKeyList();
+                foreach (string lsKey in laKey)
                 {
-                    MaxData loAppliedToTxn = loAppliedToTxnList[lnD];
+                    MaxIndex loAppliedToTxn = loAppliedToTxnIndex[lsKey] as MaxIndex;
                     IAppliedToTxnAdd loTxnAdd = loQBData.ORApplyPayment.AppliedToTxnAddList.Append();
-                    loTxnAdd.TxnID.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn.Get(loDataModelTxn.InvoiceTxnId)));
-                    loTxnAdd.PaymentAmount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loAppliedToTxn.Get(loDataModelTxn.PaymentAmount)));
-                    loTxnAdd.DiscountAmount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loAppliedToTxn.Get(loDataModelTxn.DiscountAmount)));
-                    loTxnAdd.DiscountAccountRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn.Get(loDataModelTxn.DiscountAccountRefFullName)));
-                    loTxnAdd.DiscountClassRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn.Get(loDataModelTxn.DiscountClassRefFullName)));
+                    loTxnAdd.TxnID.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn[loDataModelTxn.InvoiceTxnId]));
+                    loTxnAdd.PaymentAmount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loAppliedToTxn[loDataModelTxn.PaymentAmount]));
+
+                    double lnDiscount = MaxConvertLibrary.ConvertToDouble(typeof(object), loAppliedToTxn[loDataModelTxn.DiscountAmount]);
+                    if (lnDiscount > double.MinValue)
+                    {
+                        loTxnAdd.DiscountAmount.SetValue(lnDiscount);
+                        loTxnAdd.DiscountAccountRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn[loDataModelTxn.DiscountAccountRefFullName]));
+                        loTxnAdd.DiscountClassRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loAppliedToTxn[loDataModelTxn.DiscountClassRefFullName]));
+                    }
                 }
             }
 
