@@ -258,6 +258,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             }
         }
 
+        public string Error
+        {
+            get; set;
+        }
+
         protected override void SetProperties()
         {
             if (null != this._oAppliedToTxnList)
