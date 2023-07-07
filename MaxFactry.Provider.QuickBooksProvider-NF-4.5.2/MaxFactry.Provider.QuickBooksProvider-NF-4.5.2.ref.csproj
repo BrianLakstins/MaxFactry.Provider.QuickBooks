@@ -147,15 +147,20 @@
     <PackageReference Include="Interop.QBFC15">
       <Version>1.0.1</Version>
     </PackageReference>
-    <PackageReference Include="MaxFactry.Base">
-      <Version>1.0.20.1</Version>
-    </PackageReference>
-    <PackageReference Include="MaxFactry.Core">
-      <Version>1.0.20</Version>
-    </PackageReference>
-    <PackageReference Include="MaxFactry.General">
-      <Version>1.0.20.2</Version>
-    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MaxFactry.Base\MaxFactry.Base-NF-4.5.2\MaxFactry.Base-NF-4.5.2.ref.csproj">
+      <Project>{2120b857-fad6-4310-9ec8-3d958087fee2}</Project>
+      <Name>MaxFactry.Base-NF-4.5.2.ref</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MaxFactry.Core\MaxFactry.Core-NF-4.5.2\MaxFactry.Core-NF-4.5.2.csproj">
+      <Project>{db84bcde-6f72-4657-811f-40a824ae041f}</Project>
+      <Name>MaxFactry.Core-NF-4.5.2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MaxFactry.General\MaxFactry.General-NF-4.5.2\MaxFactry.General-NF-4.5.2.ref.csproj">
+      <Project>{a625c04c-84c7-4d75-8e53-8b37542235e0}</Project>
+      <Name>MaxFactry.General-NF-4.5.2.ref</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -165,11 +170,11 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-	<Target Name="SpicNSpan" AfterTargets="Clean">
-		<!-- common vars https://msdn.microsoft.com/en-us/library/c02as0cs.aspx?f=255&MSPPError=-2147217396 -->
-		<RemoveDir Directories="$(TargetDir)" />
-		<!-- bin -->
-		<RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
-		<!-- obj -->
-	</Target>
+  <Target Name="SpicNSpan" AfterTargets="Clean">
+    <!-- common vars https://msdn.microsoft.com/en-us/library/c02as0cs.aspx?f=255&MSPPError=-2147217396 -->
+    <RemoveDir Directories="$(TargetDir)" />
+    <!-- bin -->
+    <RemoveDir Directories="$(ProjectDir)$(BaseIntermediateOutputPath)" />
+    <!-- obj -->
+  </Target>
 </Project>
