@@ -35,6 +35,7 @@ namespace MaxFactry.Provider.QuickbooksProvider
 {
 	using System;
 	using System.Collections;
+    using MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider;
     using MaxFactry.Core;
 
 	/// <summary>
@@ -60,19 +61,19 @@ namespace MaxFactry.Provider.QuickbooksProvider
         }
 
         /// <summary>
-        /// To be run first, before anything else in the application.
-        /// </summary>
-        public override void RegisterProviders()
-        {
-        }
-
-        /// <summary>
         /// To be run after providers have been registered
         /// </summary>
         /// <param name="loConfig">The configuration for the default repository provider.</param>
         public override void SetProviderConfiguration(MaxIndex loConfig)
         {
-            MaxFactryLibrary.SetValue(typeof(MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider.MaxQuickbooksProviderRepositoryProvider) + "-Config", loConfig);
+            MaxFactryLibrary.SetValue(typeof(MaxQuickbooksProviderRepositoryProvider) + "-Config", loConfig);
+        }
+
+        /// <summary>
+        /// To be run first, before anything else in the application.
+        /// </summary>
+        public override void RegisterProviders()
+        {
         }
 
         /// <summary>
