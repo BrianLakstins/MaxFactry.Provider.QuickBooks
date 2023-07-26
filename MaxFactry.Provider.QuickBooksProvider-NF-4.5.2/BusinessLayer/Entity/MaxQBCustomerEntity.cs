@@ -34,7 +34,6 @@
 namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 {
     using System;
-    using System.Collections.Generic;
     using MaxFactry.Core;
     using MaxFactry.Base.BusinessLayer;
     using MaxFactry.Base.DataLayer;
@@ -604,6 +603,27 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             loR = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
             return loR;
+        }
+
+        public bool LoadQBDesktopByFullName(string lsFullName, Guid loId)
+        {
+            bool lbR = false;
+            MaxEntityList loCustomerList = this.LoadAllQBDesktopByFullName(lsFullName);
+            if (loCustomerList.Count == 1)
+            {
+                lbR = this.Load(((MaxQBCustomerEntity)loCustomerList[0]).Data);
+                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "LoadQBDesktopByFullName", MaxEnumGroup.LogNotice, "Got QB Customer with name [{Name}]", lsFullName));
+                if (loId != Guid.Empty)
+                {
+                    this.SetId(loId);
+                }
+            }
+            else if (loCustomerList.Count > 1)
+            {
+                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "LoadQBDesktopByFullName", MaxEnumGroup.LogError, "More than one customer found with name [{Name}] in QB", lsFullName));
+            }
+
+            return lbR;
         }
     }
 }
