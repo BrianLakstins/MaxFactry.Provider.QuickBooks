@@ -468,10 +468,29 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     loQuery.IncludeLineItems.SetValue(true);
 
                     string lsRefNumber = GetValue(loDataQuery, loDataModel.RefNumber) as string;
+                    string lsIsPaid = GetValue(loDataQuery, loDataModel.IsPaid) as string;
+                    string lsTxnDate = GetValue(loDataQuery, loDataModel.TxnDate) as string;
                     if (!string.IsNullOrEmpty(lsRefNumber))
                     {
                         loQuery.ORInvoiceQuery.RefNumberList.Add(lsRefNumber);
-                        //loQuery.ORInvoiceQuery.InvoiceFilter.ORRefNumberFilter.RefNumberFilter.RefNumber.SetValue(lsRefNumber);
+                    }
+                    else if (!string.IsNullOrEmpty(lsIsPaid))
+                    {
+                        bool lbIsPaid = MaxConvertLibrary.ConvertToBoolean(typeof(object), lsIsPaid);
+                        if (!lbIsPaid)
+                        {
+                            loQuery.ORInvoiceQuery.InvoiceFilter.PaidStatus.SetValue(ENPaidStatus.psNotPaidOnly);
+                        }
+                        else
+                        {
+                            loQuery.ORInvoiceQuery.InvoiceFilter.PaidStatus.SetValue(ENPaidStatus.psPaidOnly);
+                        }
+
+                        if (!string.IsNullOrEmpty(lsTxnDate))
+                        {
+                            DateTime ldTxnDate = MaxConvertLibrary.ConvertToDateTimeUtc(typeof(object), lsTxnDate);
+                            loQuery.ORInvoiceQuery.InvoiceFilter.ORDateRangeFilter.TxnDateRangeFilter.ORTxnDateRangeFilter.TxnDateFilter.FromTxnDate.SetValue(ldTxnDate);
+                        }
                     }
 
                     IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
@@ -1294,13 +1313,25 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     MaxIndex loLineIndex = new MaxIndex();
                     loLineIndex.Add(loLineDataModel.TxnLineID, GetAsString(loLine.InvoiceLineRet.TxnLineID));
                     loLineIndex.Add(loLineDataModel.Quantity, GetAsDouble(loLine.InvoiceLineRet.Quantity));
-                    loLineIndex.Add(loLineDataModel.ItemRef, GetAsString(loLine.InvoiceLineRet.ItemRef.FullName));
+
                     loLineIndex.Add(loLineDataModel.Desc, GetAsString(loLine.InvoiceLineRet.Desc));
-                    loLineIndex.Add(loLineDataModel.ORRatePriceLevel, GetAsDouble(loLine.InvoiceLineRet.ORRate.Rate));
+                    if (null != loLine.InvoiceLineRet.ORRate)
+                    {
+                        loLineIndex.Add(loLineDataModel.ORRatePriceLevel, GetAsDouble(loLine.InvoiceLineRet.ORRate.Rate));
+                    }
+
                     loLineIndex.Add(loLineDataModel.Amount, GetAsDouble(loLine.InvoiceLineRet.Amount));
-                    loLineIndex.Add(loLineDataModel.SalesTaxCodeRef, GetAsString(loLine.InvoiceLineRet.SalesTaxCodeRef.FullName));
+                    if (null != loLine.InvoiceLineRet.SalesTaxCodeRef)
+                    {
+                        loLineIndex.Add(loLineDataModel.SalesTaxCodeRef, GetAsString(loLine.InvoiceLineRet.SalesTaxCodeRef.FullName));
+                    }
+
                     loLineIndex.Add(loLineDataModel.Other1, GetAsString(loLine.InvoiceLineRet.Other1));
                     loLineIndex.Add(loLineDataModel.Other2, GetAsString(loLine.InvoiceLineRet.Other2));
+                    if (null != loLine.InvoiceLineRet.ItemRef)
+                    {
+                        loLineIndex.Add(loLineDataModel.ItemRef, GetAsString(loLine.InvoiceLineRet.ItemRef.FullName));
+                    }
                     laLine[lnIL] = MaxConvertLibrary.SerializeObjectToString(loLineIndex);
                 }
 

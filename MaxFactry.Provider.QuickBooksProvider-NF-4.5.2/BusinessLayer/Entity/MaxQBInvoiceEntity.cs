@@ -801,5 +801,47 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             loR.Total = lnTotal;
             return loR;
         }
+
+        public MaxEntityList LoadAllQBDesktopByPaidStatus(bool lbIsPaid)
+        {
+            this.Set(this.DataModel.IsPaid, lbIsPaid);
+            MaxData loDataFilter = new MaxData(this.Data);
+            //// Add a Query 
+            MaxDataQuery loDataQuery = new MaxDataQuery();
+            loDataQuery.StartGroup();
+            loDataQuery.AddFilter(this.DataModel.IsPaid, "=", lbIsPaid.ToString());
+            loDataQuery.AddCondition("AND");
+            loDataQuery.AddFilter(this.QBBaseDataModel.AlternateId, "=", "QBDesktop");
+            loDataQuery.EndGroup();
+
+            MaxEntityList loR = MaxEntityList.Create(this.GetType());
+            int lnTotal = int.MinValue;
+            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty, out lnTotal);
+            loR = MaxEntityList.Create(this.GetType(), loDataList);
+            loR.Total = lnTotal;
+            return loR;
+        }
+
+        public MaxEntityList LoadAllQBDesktopByTxnDatePaidStatus(DateTime ldTxnDate, bool lbIsPaid)
+        {
+            this.Set(this.DataModel.IsPaid, lbIsPaid);
+            MaxData loDataFilter = new MaxData(this.Data);
+            //// Add a Query 
+            MaxDataQuery loDataQuery = new MaxDataQuery();
+            loDataQuery.StartGroup();
+            loDataQuery.AddFilter(this.DataModel.TxnDate, "=", ldTxnDate.ToString());
+            loDataQuery.AddCondition("AND");
+            loDataQuery.AddFilter(this.DataModel.IsPaid, "=", lbIsPaid.ToString());
+            loDataQuery.AddCondition("AND");
+            loDataQuery.AddFilter(this.QBBaseDataModel.AlternateId, "=", "QBDesktop");
+            loDataQuery.EndGroup();
+
+            MaxEntityList loR = MaxEntityList.Create(this.GetType());
+            int lnTotal = int.MinValue;
+            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty, out lnTotal);
+            loR = MaxEntityList.Create(this.GetType(), loDataList);
+            loR.Total = lnTotal;
+            return loR;
+        }
     }
 }
