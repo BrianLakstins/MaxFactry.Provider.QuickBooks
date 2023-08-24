@@ -37,6 +37,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
     using MaxFactry.Core;
     using MaxFactry.Base.DataLayer;
     using Interop.QBFC15;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Default Provider for MaxQuickbooksProviderRepository
@@ -1266,6 +1267,10 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             loDataReturn.Set(loDataModel.TxnDate, GetAsDateTime(loDetail.TxnDate));
             loDataReturn.Set(loDataModel.ExternalGUID, GetAsString(loDetail.ExternalGUID));
 
+            loDataReturn.Set(loDataModel.Subtotal, GetAsDouble(loDetail.Subtotal));
+            loDataReturn.Set(loDataModel.SalesTaxTotal, GetAsDouble(loDetail.SalesTaxTotal));
+
+
             if (null != loDetail.BillAddress)
             {
                 loDataReturn.Set(loDataModel.BillAddress, MapAddressContent(loDetail.BillAddress));
@@ -1865,11 +1870,16 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
 
             loQBData.TxnDate.SetValue(MaxConvertLibrary.ConvertToDateTime(typeof(object), loData.Get(loDataModel.TxnDate)));
-            //loQBData.RefNumber.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.RefNumber)));
+            loQBData.RefNumber.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.RefNumber)));
             loQBData.TotalAmount.SetValue(MaxConvertLibrary.ConvertToDouble(typeof(object), loData.Get(loDataModel.TotalAmount)));
             //loQBData.ExchangeRate.SetValue(Convert.ToSingle(loData.Get(loDataModel.ExchangeRate)));
-            //loQBData.PaymentMethodRef.FullName.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.PaymentMethodRefFullName)));
-            //loQBData.Memo.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.Memo)));
+            string lsPaymentMethod = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.PaymentMethodRefFullName));
+            if (!string.IsNullOrEmpty(lsPaymentMethod))
+            {
+                loQBData.PaymentMethodRef.FullName.SetValue(lsPaymentMethod);
+            }
+
+            loQBData.Memo.SetValue(MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.Memo)));
 
 
             string lsDepositToAccountRefFullName = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.DepositToAccountRefFullName));
