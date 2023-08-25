@@ -582,6 +582,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 if (loData.DataModel is MaxQBInvoiceDataModel)
                 {
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    string lsInvoiceNum = loData.Get(((MaxQBInvoiceDataModel)loData.DataModel).RefNumber) as string;
                     IInvoiceAdd loQBData = loRequest.AppendInvoiceAddRq();
                     MapInvoiceContent(loQBData, loData);
                     IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
@@ -596,7 +597,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                             }
                             else
                             {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting invoice {InvoiceNum} into QB: {StatusCode} {StatusSeverity} {StatusMessage}", lsInvoiceNum, loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
                             }
                         }
                     }
