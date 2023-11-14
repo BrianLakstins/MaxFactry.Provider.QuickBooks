@@ -1703,7 +1703,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
         }
 
-
         private static void MapAddressContent(IAddress loQBData, MaxIndex loIndex)
         {
             MaxQBAddressDataModel loDataModel = new MaxQBAddressDataModel();
@@ -1768,6 +1767,13 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             MaxData loR = new MaxData(loDataModel);
             if (null != loDetail)
             {
+                loR.Set(loDataModel.CreatedDate, GetAsDateTime(loDetail.TimeCreated));
+                loR.Set(loDataModel.LastUpdateDate, GetAsDateTime(loDetail.TimeModified));
+                loR.Set(loDataModel.TxnDate, GetAsDateTime(loDetail.TxnDate));
+                loR.Set(loDataModel.TotalAmount, GetAsDouble(loDetail.TotalAmount));
+                loR.Set(loDataModel.ExternalGUID, GetAsString(loDetail.ExternalGUID));
+                loR.Set(loDataModel.Memo, GetAsString(loDetail.Memo));
+
                 /*
                 loDetail.TimeCreated;
                 loDetail.TimeModified;
@@ -1890,11 +1896,13 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
 
             //loQBData.CreditCardTxnInfo
-            Guid loExternalGuid = MaxConvertLibrary.ConvertToGuid(typeof(object), loData.Get(loDataModel.ExternalGUID));
-            if (Guid.Empty != loExternalGuid)
+
+            string lsExternalGuid = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.ExternalGUID));
+            if (!string.IsNullOrEmpty(lsExternalGuid))
             {
-                loQBData.ExternalGUID.SetValue(loExternalGuid.ToString());
+                loQBData.ExternalGUID.SetValue("{" + lsExternalGuid + "}");
             }
+
             bool lbIsAutoApply = MaxConvertLibrary.ConvertToBoolean(typeof(object), loData.Get(loDataModel.IsAutoApply));
             if (lbIsAutoApply)
             {
@@ -2070,6 +2078,13 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 if (((IQBStringType)loQBObject).IsSet())
                 {
                     lsR = ((IQBStringType)loQBObject).GetValue();
+                }
+            }
+            else if (loQBObject is IQBGUIDType)
+            {
+                if (((IQBGUIDType)loQBObject).IsSet())
+                {
+                    lsR = ((IQBGUIDType)loQBObject).GetValue();
                 }
             }
             else if (loQBObject is IQBIDType)

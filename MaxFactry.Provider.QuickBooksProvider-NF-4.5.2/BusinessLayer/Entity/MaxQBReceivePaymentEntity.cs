@@ -73,7 +73,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             set
             {
-                this.Set(this.DataModel.CustomerFullName, value);
+                this.Set(this.DataModel.CustomerFullName, value.Substring(0, Math.Min(value.Length, 209)));
             }
         }
 
@@ -86,7 +86,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             set
             {
-                this.Set(this.DataModel.ARAccountRefFullName, value);
+                this.Set(this.DataModel.ARAccountRefFullName, value.Substring(0, Math.Min(value.Length, 159)));
             }
         }
 
@@ -112,7 +112,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             set
             {
-                this.Set(this.DataModel.RefNumber, value);
+                this.Set(this.DataModel.RefNumber, value.Substring(0, Math.Min(value.Length, 20)));
             }
         }
 
@@ -151,7 +151,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             set
             {
-                this.Set(this.DataModel.PaymentMethodRefFullName, value);
+                this.Set(this.DataModel.PaymentMethodRefFullName, value.Substring(0, Math.Min(value.Length, 31)));
             }
         }
 
@@ -164,7 +164,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             set
             {
-                this.Set(this.DataModel.Memo, value);
+                this.Set(this.DataModel.Memo, value.Substring(0, Math.Min(value.Length, 4095)));
             }
         }
 
@@ -177,7 +177,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             set
             {
-                this.Set(this.DataModel.DepositToAccountRefFullName, value);
+                this.Set(this.DataModel.DepositToAccountRefFullName, value.Substring(0, Math.Min(value.Length, 159)));
             }
         }
 
@@ -300,6 +300,24 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             return MaxBusinessLibrary.GetEntity(
                 typeof(MaxQBReceivePaymentEntity),
                 typeof(MaxQBReceivePaymentDataModel)) as MaxQBReceivePaymentEntity;
+        }
+
+        public MaxEntityList LoadAllQBDesktopByRefNumber(string lsRefNumber)
+        {
+            //// Add a Query 
+            MaxDataQuery loDataQuery = new MaxDataQuery();
+            loDataQuery.StartGroup();
+            loDataQuery.AddFilter(this.DataModel.RefNumber, "=", lsRefNumber);
+            loDataQuery.AddCondition("AND");
+            loDataQuery.AddFilter(this.QBBaseDataModel.AlternateId, "=", "QBDesktop");
+            loDataQuery.EndGroup();
+
+            MaxEntityList loR = MaxEntityList.Create(this.GetType());
+            int lnTotal = int.MinValue;
+            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty, out lnTotal);
+            loR = MaxEntityList.Create(this.GetType(), loDataList);
+            loR.Total = lnTotal;
+            return loR;
         }
     }
 }
