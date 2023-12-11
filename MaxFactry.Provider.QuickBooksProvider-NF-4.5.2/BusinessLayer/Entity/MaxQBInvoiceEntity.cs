@@ -839,8 +839,21 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             MaxEntityList loR = MaxEntityList.Create(this.GetType());
             int lnTotal = int.MinValue;
             MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty, out lnTotal);
-            loR = MaxEntityList.Create(this.GetType(), loDataList);
+            MaxEntityList loList = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
+
+            SortedList<string, MaxQBInvoiceEntity> loSortedList = new SortedList<string, MaxQBInvoiceEntity>();
+            for (int lnE = 0; lnE < loList.Count; lnE++)
+            {
+                MaxQBInvoiceEntity loEntity = loList[lnE] as MaxQBInvoiceEntity;
+                loSortedList.Add(MaxConvertLibrary.ConvertToSortString(typeof(object), loEntity.TxnDate) + loEntity.GetDefaultSortString(), loEntity);
+            }
+
+            foreach (MaxQBInvoiceEntity loEntity in loSortedList.Values)
+            {
+                loR.Add(loEntity);
+            }
+
             return loR;
         }
     }
