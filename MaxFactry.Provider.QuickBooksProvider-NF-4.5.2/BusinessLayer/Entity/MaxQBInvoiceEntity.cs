@@ -315,6 +315,8 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             set
             {
                 this.Set(this.DataModel.PONumber, value);
+                //// Should we truncate it, or let it cause an error when too long?
+                //this.Set(this.DataModel.PONumber, value.Substring(0, Math.Min(value.Length, 25)));
             }
         }
 

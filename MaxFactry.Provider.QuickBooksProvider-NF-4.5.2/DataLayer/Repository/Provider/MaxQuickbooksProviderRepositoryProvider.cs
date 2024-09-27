@@ -461,6 +461,33 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     }
 
                 }
+                else if (loData.DataModel is MaxQBSalesRepDataModel)
+                {
+                    MaxQBSalesRepDataModel loDataModel = loData.DataModel as MaxQBSalesRepDataModel;
+                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                    loRequest.AppendSalesRepQueryRq();
+                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                    if (null != loSetResponse)
+                    {
+                        if (loSetResponse.ResponseList.Count == 1)
+                        {
+                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                            ISalesRepRetList loList = loResponse.Detail as ISalesRepRetList;
+                            if (null != loList && loList.Count > 0)
+                            {
+                                MaxDataList loR = new MaxDataList(loDataModel);
+                                for (int lnL = 0; lnL < loList.Count; lnL++)
+                                {
+                                    loR.Add(MapSalesRepContent(loList.GetAt(lnL)));
+                                }
+
+                                lnTotal = loR.Count;
+                                return loR;
+                            }
+                        }
+                    }
+
+                }
                 else if (loData.DataModel is MaxQBInvoiceDataModel)
                 {
                     MaxQBInvoiceDataModel loDataModel = loData.DataModel as MaxQBInvoiceDataModel;
@@ -1239,6 +1266,23 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             return loR;
         }
 
+        private static MaxData MapSalesRepContent(ISalesRepRet loDetail)
+        {
+            MaxQBSalesRepDataModel loDataModel = new MaxQBSalesRepDataModel();
+            MaxData loR = new MaxData(loDataModel);
+            if (null != loDetail)
+            {
+                loR.Set(loDataModel.ListID, GetAsString(loDetail.ListID));
+                loR.Set(loDataModel.TimeCreated, GetAsDateTime(loDetail.TimeCreated));
+                loR.Set(loDataModel.TimeModified, GetAsString(loDetail.TimeModified));
+                loR.Set(loDataModel.EditSequence, GetAsString(loDetail.EditSequence));
+                loR.Set(loDataModel.Initial, GetAsString(loDetail.Initial));
+            }
+
+            return loR;
+        }
+
+
         private static void MapRefContent(IQBBaseRef loQBData, MaxIndex loIndex)
         {
             MaxQBBaseRefDataModel loDataModel = new MaxQBBaseRefDataModel();
@@ -1628,6 +1672,12 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             if (!string.IsNullOrEmpty(lsTerms))
             {
                 loQBData.TermsRef.FullName.SetValue(lsTerms);
+            }
+
+            string lsSalesRep = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.SalesRepRef));
+            if (!string.IsNullOrEmpty(lsSalesRep))
+            {
+                loQBData.SalesRepRef.ListID.SetValue(lsSalesRep);
             }
         }
 

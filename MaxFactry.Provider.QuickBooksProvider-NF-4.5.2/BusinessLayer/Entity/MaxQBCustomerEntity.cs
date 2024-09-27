@@ -562,6 +562,19 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             }
         }
 
+        public string SalesRepRef
+        {
+            get
+            {
+                return this.GetString(this.DataModel.SalesRepRef);
+            }
+
+            set
+            {
+                this.Set(this.DataModel.SalesRepRef, value);
+            }
+        }
+
         /// <summary>
         /// Gets the Data Model for this entity
         /// </summary>
