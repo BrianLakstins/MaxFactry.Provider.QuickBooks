@@ -1334,7 +1334,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loDataReturn.Set(loDataModel.BillAddressBlock, MaxConvertLibrary.SerializeObjectToString(loBillAddressBlockIndex));
             }
 
-
             if (null != loDetail.ShipAddress)
             {
                 loDataReturn.Set(loDataModel.ShipAddress, MapAddressContent(loDetail.ShipAddress));
@@ -1434,6 +1433,12 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 {
                     MapRefContent(loQBData.TermsRef, loTermsIndex);
                 }
+            }
+
+            string lsSalesRep = MaxConvertLibrary.ConvertToString(typeof(object), loData.Get(loDataModel.SalesRepRef));
+            if (!string.IsNullOrEmpty(lsSalesRep))
+            {
+                loQBData.SalesRepRef.ListID.SetValue(lsSalesRep);
             }
 
             string lsCustomerSalesTaxCodeRef = loData.Get(loDataModel.CustomerSalesTaxCodeRef) as string;
