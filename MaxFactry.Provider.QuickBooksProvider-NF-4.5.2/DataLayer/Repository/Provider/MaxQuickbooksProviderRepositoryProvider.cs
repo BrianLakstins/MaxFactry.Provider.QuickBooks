@@ -36,6 +36,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
     using System;
     using MaxFactry.Core;
     using MaxFactry.Base.DataLayer;
+    using MaxFactry.Base.DataLayer.Library;
     using Interop.QBFC15;
     using System.Runtime.CompilerServices;
 
@@ -169,9 +170,9 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             return false;
         }
 
-        public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsSort, out int lnTotal, params string[] laFields)
+        public override MaxDataList Select(MaxData loData, MaxDataQuery loDataQuery, int lnPageIndex, int lnPageSize, string lsSort, params string[] laFields)
         {
-            string lsAlternateId = GetValue(loDataQuery, ((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
+            string lsAlternateId = MaxDataLibrary.GetValue(loDataQuery, ((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
             if (!string.IsNullOrEmpty(lsAlternateId) && lsAlternateId == "QBDesktop")
             {
                 if (loData.DataModel is MaxQBHostDataModel)
@@ -185,7 +186,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     {
                         if (loSetResponse.ResponseList.Count == 1)
                         {
-                            lnTotal = 1;
                             MaxData loDataReturn = new MaxData(loDataModel);
                             IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
                             IHostRet loDetail = loResponse.Detail as IHostRet;
@@ -200,6 +200,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                             loDataReturn.Set(loDataModel.ProductName, GetAsString(loDetail.ProductName));
                             loDataReturn.Set(loDataModel.QBFileMode, GetAsInt(loDetail.QBFileMode));
 
+                            loR.Total = 1;
                             loR.Add(loDataReturn);
                             return loR;
                         }
@@ -237,7 +238,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                     loR.Add(loDataReturn);
                                 }
 
-                                lnTotal = loR.Count;
+                                loR.Total = loR.Count;
                                 return loR;
                             }
                         }
@@ -250,7 +251,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
                     ICustomerQuery loQuery = loRequest.AppendCustomerQueryRq();
 
-                    string lsFullName = GetValue(loDataQuery, loDataModel.FullName) as string;
+                    string lsFullName = MaxDataLibrary.GetValue(loDataQuery, loDataModel.FullName) as string;
                     if (!string.IsNullOrEmpty(lsFullName))
                     {
                         loQuery.ORCustomerListQuery.FullNameList.Add(lsFullName);
@@ -275,7 +276,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                             loR.Add(MapCustomerContent(loList.GetAt(lnL)));
                                         }
 
-                                        lnTotal = loR.Count;
+                                        loR.Total = loR.Count;
                                         return loR;
                                     }
                                 }
@@ -308,7 +309,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                     loR.Add(MapItemContent(loList.GetAt(lnL)));
                                 }
 
-                                lnTotal = loR.Count;
+                                loR.Total = loR.Count;
                                 return loR;
                             }
                         }
@@ -320,7 +321,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
                     IItemNonInventoryQuery loQuery = loRequest.AppendItemNonInventoryQueryRq();
 
-                    string lsFullName = GetValue(loDataQuery, loDataModel.FullName) as string;
+                    string lsFullName = MaxDataLibrary.GetValue(loDataQuery, loDataModel.FullName) as string;
                     if (!string.IsNullOrEmpty(lsFullName))
                     {
                         loQuery.ORListQueryWithOwnerIDAndClass.FullNameList.Add(lsFullName);
@@ -343,7 +344,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                         loR.Add(MapItemNonInventoryContent(loList.GetAt(lnL)));
                                     }
 
-                                    lnTotal = loR.Count;
+                                    loR.Total = loR.Count;
                                     return loR;
                                 }
                             }
@@ -360,7 +361,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
                     IItemOtherChargeQuery loQuery = loRequest.AppendItemOtherChargeQueryRq();
 
-                    string lsFullName = GetValue(loDataQuery, loDataModel.FullName) as string;
+                    string lsFullName = MaxDataLibrary.GetValue(loDataQuery, loDataModel.FullName) as string;
                     if (!string.IsNullOrEmpty(lsFullName))
                     {
                         loQuery.ORListQueryWithOwnerIDAndClass.FullNameList.Add(lsFullName);
@@ -383,7 +384,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                         loR.Add(MapItemOtherChargeContent(loList.GetAt(lnL)));
                                     }
 
-                                    lnTotal = loR.Count;
+                                    loR.Total = loR.Count;
                                     return loR;
                                 }
                             }
@@ -400,7 +401,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
                     IItemServiceQuery loQuery = loRequest.AppendItemServiceQueryRq();
 
-                    string lsFullName = GetValue(loDataQuery, loDataModel.FullName) as string;
+                    string lsFullName = MaxDataLibrary.GetValue(loDataQuery, loDataModel.FullName) as string;
                     if (!string.IsNullOrEmpty(lsFullName))
                     {
                         loQuery.ORListQueryWithOwnerIDAndClass.FullNameList.Add(lsFullName);
@@ -423,7 +424,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                         loR.Add(MapItemServiceContent(loList.GetAt(lnL)));
                                     }
 
-                                    lnTotal = loR.Count;
+                                    loR.Total = loR.Count;
                                     return loR;
                                 }
                             }
@@ -454,7 +455,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                     loR.Add(MapStandardTermsContent(loList.GetAt(lnL).StandardTermsRet));
                                 }
 
-                                lnTotal = loR.Count;
+                                loR.Total = loR.Count;
                                 return loR;
                             }
                         }
@@ -481,7 +482,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                     loR.Add(MapSalesRepContent(loList.GetAt(lnL)));
                                 }
 
-                                lnTotal = loR.Count;
+                                loR.Total = loR.Count;
                                 return loR;
                             }
                         }
@@ -495,9 +496,9 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     IInvoiceQuery loQuery = loRequest.AppendInvoiceQueryRq();
                     loQuery.IncludeLineItems.SetValue(true);
 
-                    string lsRefNumber = GetValue(loDataQuery, loDataModel.RefNumber) as string;
-                    string lsIsPaid = GetValue(loDataQuery, loDataModel.IsPaid) as string;
-                    string lsTxnDate = GetValue(loDataQuery, loDataModel.TxnDate) as string;
+                    string lsRefNumber = MaxDataLibrary.GetValue(loDataQuery, loDataModel.RefNumber) as string;
+                    string lsIsPaid = MaxDataLibrary.GetValue(loDataQuery, loDataModel.IsPaid) as string;
+                    string lsTxnDate = MaxDataLibrary.GetValue(loDataQuery, loDataModel.TxnDate) as string;
                     if (!string.IsNullOrEmpty(lsRefNumber))
                     {
                         loQuery.ORInvoiceQuery.RefNumberList.Add(lsRefNumber);
@@ -540,7 +541,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                             loR.Add(MapInvoiceContent(loList.GetAt(lnL)));
                                         }
 
-                                        lnTotal = loR.Count;
+                                        loR.Total = loR.Count;
                                         return loR;
                                     }
                                 }
@@ -559,7 +560,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                     IReceivePaymentQuery loQuery = loRequest.AppendReceivePaymentQueryRq();
                     loQuery.IncludeLineItems.SetValue(true);
 
-                    string lsRefNumber = GetValue(loDataQuery, loDataModel.RefNumber) as string;
+                    string lsRefNumber = MaxDataLibrary.GetValue(loDataQuery, loDataModel.RefNumber) as string;
                     if (!string.IsNullOrEmpty(lsRefNumber))
                     {
                         loQuery.ORTxnQuery.RefNumberList.Add(lsRefNumber);
@@ -584,7 +585,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                             loR.Add(MapReceivePaymentContent(loList.GetAt(lnL)));
                                         }
 
-                                        lnTotal = loR.Count;
+                                        loR.Total = loR.Count;
                                         return loR;
                                     }
                                 }
@@ -598,7 +599,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 }
             }
 
-            return base.Select(loData, loDataQuery, lnPageIndex, lnPageSize, lsSort, out lnTotal, laFields);
+            return base.Select(loData, loDataQuery, lnPageIndex, lnPageSize, lsSort, laFields);
         }
 
         public override bool Insert(MaxData loData)
@@ -2264,7 +2265,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
             if (string.IsNullOrEmpty(lsAlternateId) || lsAlternateId != "QBDesktop")
             {
-                IMaxDataContextProvider loProvider = MaxDataLibrary.GetContextProvider(this, loData);
+                IMaxDataContextLibraryProvider loProvider = MaxDataContextLibrary.Instance.GetContextProvider(this, loData);
                 if (null != loProvider)
                 {
                     lbR = loProvider.StreamSave(loData, lsKey);
@@ -2287,7 +2288,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
             if (string.IsNullOrEmpty(lsAlternateId) || lsAlternateId != "QBDesktop")
             {
-                IMaxDataContextProvider loProvider = MaxDataLibrary.GetContextProvider(this, loData);
+                IMaxDataContextLibraryProvider loProvider = MaxDataContextLibrary.Instance.GetContextProvider(this, loData);
                 if (null != loProvider)
                 {
                     lbR = loProvider.StreamDelete(loData, lsKey);

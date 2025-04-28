@@ -38,6 +38,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
     using MaxFactry.Core;
     using MaxFactry.Base.BusinessLayer;
     using MaxFactry.Base.DataLayer;
+    using MaxFactry.Base.DataLayer.Library;
     using MaxFactry.Provider.QuickbooksProvider.DataLayer;
     using Interop.QBFC15;
 
@@ -798,7 +799,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             MaxEntityList loR = MaxEntityList.Create(this.GetType());
             int lnTotal = int.MinValue;
-            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty, out lnTotal);
+            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
             loR = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
             return loR;
@@ -818,7 +819,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             MaxEntityList loR = MaxEntityList.Create(this.GetType());
             int lnTotal = int.MinValue;
-            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty, out lnTotal);
+            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
             loR = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
             return loR;
@@ -840,7 +841,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             MaxEntityList loR = MaxEntityList.Create(this.GetType());
             int lnTotal = int.MinValue;
-            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty, out lnTotal);
+            MaxDataList loDataList = MaxBaseIdRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
             MaxEntityList loList = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
 

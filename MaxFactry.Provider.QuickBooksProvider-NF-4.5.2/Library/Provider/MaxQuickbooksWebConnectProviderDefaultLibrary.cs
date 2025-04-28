@@ -131,7 +131,8 @@ namespace MaxFactry.Provider.QuickbooksProvider.Provider
                         loSession.IsActive = true;
                         loSession.RequestCount = 0;
                         loSession.StartDate = loSessionStart;
-                        loSession.Insert(loSessionId);
+                        loSession.SetId(loSessionId);
+                        loSession.Insert();
                     }
                     else
                     {

@@ -38,6 +38,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
     using MaxFactry.Core;
     using MaxFactry.Base.BusinessLayer;
     using MaxFactry.Base.DataLayer;
+    using MaxFactry.Base.DataLayer.Library;
     using MaxFactry.Provider.QuickbooksProvider.DataLayer;
 
     public class MaxQBHostEntity : MaxQBBaseEntity
