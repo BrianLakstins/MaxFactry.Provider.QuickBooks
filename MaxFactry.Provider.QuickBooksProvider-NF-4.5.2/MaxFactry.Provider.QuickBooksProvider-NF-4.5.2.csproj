@@ -150,7 +150,7 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.General">
-      <Version>1.0.24.1</Version>
+      <Version>1.0.24.44</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

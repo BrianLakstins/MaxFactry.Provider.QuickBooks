@@ -602,227 +602,215 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             return base.Select(loData, loDataQuery, lnPageIndex, lnPageSize, lsSort, laFields);
         }
 
-        public override bool Insert(MaxData loData)
+        public override int Insert(MaxDataList loDataList)
         {
-            string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
-            if (!string.IsNullOrEmpty(lsAlternateId) && lsAlternateId == "QBDesktop")
+            int lnR = 0;
+            if (loDataList.Count > 0)
             {
-                if (loData.DataModel is MaxQBInvoiceDataModel)
+                MaxData loData = loDataList[0];
+                string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
+                if (!string.IsNullOrEmpty(lsAlternateId) && lsAlternateId == "QBDesktop")
                 {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    string lsInvoiceNum = loData.Get(((MaxQBInvoiceDataModel)loData.DataModel).RefNumber) as string;
-                    IInvoiceAdd loQBData = loRequest.AppendInvoiceAddRq();
-                    MapInvoiceContent(loQBData, loData);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
+                    if (loData.DataModel is MaxQBInvoiceDataModel)
                     {
-                        if (loSetResponse.ResponseList.Count == 1)
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        string lsInvoiceNum = loData.Get(((MaxQBInvoiceDataModel)loData.DataModel).RefNumber) as string;
+                        IInvoiceAdd loQBData = loRequest.AppendInvoiceAddRq();
+                        MapInvoiceContent(loQBData, loData);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
                         {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
+                            if (loSetResponse.ResponseList.Count == 1)
                             {
-                                return true;
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {                                    
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting invoice {InvoiceNum} into QB: {StatusCode} {StatusSeverity} {StatusMessage}", lsInvoiceNum, loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
                             }
-                            else
+                        }
+                    }
+                    else if (loData.DataModel is MaxQBCustomerDataModel)
+                    {
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        ICustomerAdd loQBData = loRequest.AppendCustomerAddRq();
+                        MapCustomerContent(loQBData, loData);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
+                        {
+                            if (loSetResponse.ResponseList.Count == 1)
                             {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting invoice {InvoiceNum} into QB: {StatusCode} {StatusSeverity} {StatusMessage}", lsInvoiceNum, loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
+                            }
+                        }
+                    }
+                    else if (loData.DataModel is MaxQBItemServiceDataModel)
+                    {
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        IItemServiceAdd loQBData = loRequest.AppendItemServiceAddRq();
+                        MapItemServiceContent(loQBData, loData);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
+                        {
+                            if (loSetResponse.ResponseList.Count == 1)
+                            {
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemServiceDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
+                            }
+                        }
+                    }
+                    else if (loData.DataModel is MaxQBItemNonInventoryDataModel)
+                    {
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        IItemNonInventoryAdd loQBData = loRequest.AppendItemNonInventoryAddRq();
+                        MapItemNonInventoryContent(loQBData, loData);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
+                        {
+                            if (loSetResponse.ResponseList.Count == 1)
+                            {
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemNonInventoryDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
+                            }
+                        }
+                    }
+                    else if (loData.DataModel is MaxQBReceivePaymentDataModel)
+                    {
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        IReceivePaymentAdd loQBData = loRequest.AppendReceivePaymentAddRq();
+                        MapReceivePaymentContent(loQBData, loData, loRequest);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
+                        {
+                            if (loSetResponse.ResponseList.Count == 1)
+                            {
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBReceivePaymentDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
                             }
                         }
                     }
                 }
-                else if (loData.DataModel is MaxQBCustomerDataModel)
+                else
                 {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    ICustomerAdd loQBData = loRequest.AppendCustomerAddRq();
-                    MapCustomerContent(loQBData, loData);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
-                    {
-                        if (loSetResponse.ResponseList.Count == 1)
-                        {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
-                            }
-                        }
-                    }
+                    lnR = base.Insert(loDataList);
                 }
-                else if (loData.DataModel is MaxQBItemServiceDataModel)
-                {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    IItemServiceAdd loQBData = loRequest.AppendItemServiceAddRq();
-                    MapItemServiceContent(loQBData, loData);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
-                    {
-                        if (loSetResponse.ResponseList.Count == 1)
-                        {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemServiceDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
-                            }
-                        }
-                    }
-                }
-                else if (loData.DataModel is MaxQBItemNonInventoryDataModel)
-                {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    IItemNonInventoryAdd loQBData = loRequest.AppendItemNonInventoryAddRq();
-                    MapItemNonInventoryContent(loQBData, loData);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
-                    {
-                        if (loSetResponse.ResponseList.Count == 1)
-                        {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBItemNonInventoryDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
-                            }
-                        }
-                    }
-                }
-                else if (loData.DataModel is MaxQBReceivePaymentDataModel)
-                {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    IReceivePaymentAdd loQBData = loRequest.AppendReceivePaymentAddRq();
-                    MapReceivePaymentContent(loQBData, loData, loRequest);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
-                    {
-                        if (loSetResponse.ResponseList.Count == 1)
-                        {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Insert", MaxEnumGroup.LogError, "Error inserting MaxQBReceivePaymentDataModel into QB: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
-                            }
-                        }
-                    }
-                }
-
-                return false;
             }
 
-            return base.Insert(loData);
+
+            return lnR;
         }
 
-        public override bool Update(MaxData loData)
+        public override int Update(MaxDataList loDataList)
         {
-            string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
-            if (!string.IsNullOrEmpty(lsAlternateId) && lsAlternateId == "QBDesktop")
+            int lnR = 0;
+            if (loDataList.Count > 0)
             {
-                if (loData.DataModel is MaxQBInvoiceDataModel)
+                MaxData loData = loDataList[0];
+                string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
+                if (!string.IsNullOrEmpty(lsAlternateId) && lsAlternateId == "QBDesktop")
                 {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    IInvoiceMod loQBData = loRequest.AppendInvoiceModRq();
-                    MapInvoiceContent(loQBData, loData);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
+                    if (loData.DataModel is MaxQBInvoiceDataModel)
                     {
-                        if (loSetResponse.ResponseList.Count == 1)
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        IInvoiceMod loQBData = loRequest.AppendInvoiceModRq();
+                        MapInvoiceContent(loQBData, loData);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
                         {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
+                            if (loSetResponse.ResponseList.Count == 1)
                             {
-                                return true;
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBInvoiceDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
                             }
-                            else
+                        }
+                    }
+                    else if (loData.DataModel is MaxQBCustomerDataModel)
+                    {
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        ICustomerMod loQBData = loRequest.AppendCustomerModRq();
+                        MapCustomerContent(loQBData, loData);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
+                        {
+                            if (loSetResponse.ResponseList.Count == 1)
                             {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBInvoiceDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBCustomerDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
+                            }
+                        }
+                    }
+                    else if (loData.DataModel is MaxQBItemServiceDataModel)
+                    {
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        IItemServiceAdd loQBData = loRequest.AppendItemServiceAddRq();
+                        MapItemServiceContent(loQBData, loData);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
+                        {
+                            if (loSetResponse.ResponseList.Count == 1)
+                            {
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBItemServiceDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
+                            }
+                        }
+                    }
+                    else if (loData.DataModel is MaxQBItemNonInventoryDataModel)
+                    {
+                        IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
+                        IItemNonInventoryAdd loQBData = loRequest.AppendItemNonInventoryAddRq();
+                        MapItemNonInventoryContent(loQBData, loData);
+                        IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
+                        if (null != loSetResponse)
+                        {
+                            if (loSetResponse.ResponseList.Count == 1)
+                            {
+                                IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
+                                if (loResponse.StatusCode != 0)
+                                {
+                                    lnR |= 1;
+                                    MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBItemNonInventoryDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
+                                }
                             }
                         }
                     }
                 }
-                else if (loData.DataModel is MaxQBCustomerDataModel)
-                {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    ICustomerMod loQBData = loRequest.AppendCustomerModRq();
-                    MapCustomerContent(loQBData, loData);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
-                    {
-                        if (loSetResponse.ResponseList.Count == 1)
-                        {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBCustomerDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
-                            }
-                        }
-                    }
-                }
-                else if (loData.DataModel is MaxQBItemServiceDataModel)
-                {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    IItemServiceAdd loQBData = loRequest.AppendItemServiceAddRq();
-                    MapItemServiceContent(loQBData, loData);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
-                    {
-                        if (loSetResponse.ResponseList.Count == 1)
-                        {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBItemServiceDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
-                            }
-                        }
-                    }
-                }
-                else if (loData.DataModel is MaxQBItemNonInventoryDataModel)
-                {
-                    IMsgSetRequest loRequest = this._oQBSessionManager.CreateMsgSetRequest("US", 14, 0);
-                    IItemNonInventoryAdd loQBData = loRequest.AppendItemNonInventoryAddRq();
-                    MapItemNonInventoryContent(loQBData, loData);
-                    IMsgSetResponse loSetResponse = this.GetSetResponse(loRequest);
-                    if (null != loSetResponse)
-                    {
-                        if (loSetResponse.ResponseList.Count == 1)
-                        {
-                            IResponse loResponse = loSetResponse.ResponseList.GetAt(0);
-                            if (loResponse.StatusCode == 0)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "Update", MaxEnumGroup.LogError, "Error updating QB for MaxQBItemNonInventoryDataModel: {StatusCode} {StatusSeverity} {StatusMessage}", loResponse.StatusCode, loResponse.StatusSeverity, loResponse.StatusMessage));
-                            }
-                        }
-                    }
-                }
-
-                return false;
+            }
+            else
+            {
+                lnR = base.Update(loDataList);
             }
 
-            return base.Insert(loData);
+            return lnR;
         }
 
 
@@ -2247,51 +2235,6 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 if (((IQBBoolType)loQBObject).IsSet())
                 {
                     lbR = ((IQBBoolType)loQBObject).GetValue();
-                }
-            }
-
-            return lbR;
-        }
-
-        /// <summary>
-        /// Writes stream data to storage.
-        /// </summary>
-        /// <param name="loData">The data index for the object</param>
-        /// <param name="lsKey">Data element name to write</param>
-        /// <returns>Number of bytes written to storage.</returns>
-        public override bool StreamSave(MaxData loData, string lsKey)
-        {
-            bool lbR = false;
-            string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
-            if (string.IsNullOrEmpty(lsAlternateId) || lsAlternateId != "QBDesktop")
-            {
-                IMaxDataContextLibraryProvider loProvider = MaxDataContextLibrary.Instance.GetContextProvider(this, loData);
-                if (null != loProvider)
-                {
-                    lbR = loProvider.StreamSave(loData, lsKey);
-                }
-            }
-
-            return lbR;
-        }
-
-        /// <summary>
-        /// Removes stream from storage.
-        /// </summary>
-        /// <param name="loData">The data index for the object</param>
-        /// <param name="lsKey">Data element name to remove</param>
-        /// <returns>true if successful.</returns>
-        public override bool StreamDelete(MaxData loData, string lsKey)
-        {
-            
-            bool lbR = false;
-            string lsAlternateId = loData.Get(((MaxBaseIdDataModel)loData.DataModel).AlternateId) as string;
-            if (string.IsNullOrEmpty(lsAlternateId) || lsAlternateId != "QBDesktop")
-            {
-                IMaxDataContextLibraryProvider loProvider = MaxDataContextLibrary.Instance.GetContextProvider(this, loData);
-                if (null != loProvider)
-                {
-                    lbR = loProvider.StreamDelete(loData, lsKey);
                 }
             }
 
