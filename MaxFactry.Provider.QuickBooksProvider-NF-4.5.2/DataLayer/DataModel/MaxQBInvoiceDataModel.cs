@@ -28,6 +28,7 @@
 #region Change Log
 // <changelog>
 // <change date="11/4/2021" author="Brian A. Lakstins" description="Initial creation">
+// <change date="6/9/2025" author="Brian A. Lakstins" description="Specify required fields as part of DataKey">
 // </changelog>
 #endregion
 
@@ -148,9 +149,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer
         {
             this.SetDataStorageName("MaxQBInvoice");
             this.AddNullable(this.TxnID, typeof(MaxShortString));
+            this.AddAttribute(this.TxnID, AttributeIsDataKey, "true");
             this.AddNullable(this.TimeCreated, typeof(DateTime));
             this.AddNullable(this.TimeModified, typeof(DateTime));
             this.AddNullable(this.EditSequence, typeof(MaxShortString));
+            this.AddAttribute(this.EditSequence, AttributeIsDataKey, "true");
             this.AddNullable(this.TxnNumber, typeof(int));
             this.AddNullable(this.CustomerRef, typeof(MaxShortString));
             this.AddNullable(this.ClassRef, typeof(MaxShortString));

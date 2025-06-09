@@ -28,6 +28,7 @@
 #region Change Log
 // <changelog>
 // <change date="10/22/2015" author="Brian A. Lakstins" description="Initial creation">
+// <change date="6/9/2025" author="Brian A. Lakstins" description="Remove Id as part of DataKey">
 // </changelog>
 #endregion
 
@@ -50,6 +51,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer
             this.RepositoryProviderType = typeof(MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider.MaxQuickbooksProviderRepositoryProvider);
             this.RepositoryType = typeof(MaxQuickbooksProviderRepository);
             this.AddNullable(this.Type, typeof(string));
+            this.AddAttribute(this.Id, AttributeIsDataKey, "false");
         }
     }
 }
