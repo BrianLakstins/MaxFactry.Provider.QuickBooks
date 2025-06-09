@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Lakstins Family LLC Code Signing.pfx" />
     <None Include="MaxFactry.pfx" />
     <None Include="MaxFactry.snk" />
     <None Include="QBSDK_ProGuide.pdf" />
@@ -149,8 +150,11 @@
     <PackageReference Include="Interop.QBFC15">
       <Version>1.0.1</Version>
     </PackageReference>
+    <PackageReference Include="MaxFactry.Base">
+      <Version>1.0.24.51</Version>
+    </PackageReference>
     <PackageReference Include="MaxFactry.General">
-      <Version>1.0.24.44</Version>
+      <Version>1.0.24.50</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

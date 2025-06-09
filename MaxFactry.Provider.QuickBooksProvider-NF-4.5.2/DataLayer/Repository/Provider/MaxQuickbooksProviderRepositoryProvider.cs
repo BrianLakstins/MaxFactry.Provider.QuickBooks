@@ -43,7 +43,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
     /// <summary>
     /// Default Provider for MaxQuickbooksProviderRepository
     /// </summary>
-    public class MaxQuickbooksProviderRepositoryProvider : MaxFactry.Base.DataLayer.Provider.MaxBaseIdRepositoryDefaultProvider, IMaxQuickbooksProviderRepositoryProvider
+    public class MaxQuickbooksProviderRepositoryProvider : MaxFactry.Base.DataLayer.Provider.MaxBaseRepositoryDefaultProvider, IMaxQuickbooksProviderRepositoryProvider
     {
         private QBSessionManager _oQBSessionManager = null;
 
@@ -201,6 +201,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                             loDataReturn.Set(loDataModel.QBFileMode, GetAsInt(loDetail.QBFileMode));
 
                             loR.Total = 1;
+                            loDataReturn.ClearChanged();
                             loR.Add(loDataReturn);
                             return loR;
                         }
@@ -235,6 +236,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                                     loDataReturn.Set(loDataModel.TimeCreated, GetAsDateTime(loDetail.TimeCreated));
                                     loDataReturn.Set(loDataModel.TimeModified, GetAsDateTime(loDetail.TimeModified));
                                     loDataReturn.Set(loDataModel.IsActive, GetAsBool(loDetail.IsActive));
+                                    loDataReturn.ClearChanged();
                                     loR.Add(loDataReturn);
                                 }
 
@@ -972,6 +974,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             //loDataReturn.Set(loDataModel.TaxRegistrationNumber, GetAsString(loDetail.TermsRef));
             loDataReturn.Set(loDataModel.TotalBalance, GetAsDouble(loDetail.TotalBalance));
 
+            loDataReturn.ClearChanged();
             return loDataReturn;
         }
 
@@ -1114,7 +1117,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loR.Set(loDataModel.ItemSubtotalRet, MaxConvertLibrary.SerializeObjectToString(loItemSubtotalIndex));
             }
 
-
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1148,7 +1151,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loR.Set(loDataModel.ORSalesOrPurchase, MapORSalesPurchaseContent(loDetail.ORSalesPurchase.SalesOrPurchase));
             }
 
-            
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1171,6 +1174,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             loR.Set(loDataModel.ExternalGUID, GetAsString(loDetail.ExternalGUID));
             loR.Set(loDataModel.IsTaxIncluded, GetAsBool(loDetail.IsTaxIncluded));
             loR.Set(loDataModel.Sublevel, GetAsInt(loDetail.Sublevel));
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1193,6 +1197,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             loR.Set(loDataModel.ExternalGUID, GetAsString(loDetail.ExternalGUID));
             loR.Set(loDataModel.IsTaxIncluded, GetAsBool(loDetail.IsTaxIncluded));
             loR.Set(loDataModel.Sublevel, GetAsInt(loDetail.Sublevel));
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1208,6 +1213,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             loR.Set(loDataModel.PurchaseTaxCodeRef, MapRefContent(loDetail.PurchaseTaxCodeRef));
             loR.Set(loDataModel.ExpenseAccountRef, MapRefContent(loDetail.ExpenseAccountRef));
             loR.Set(loDataModel.PrefVendorRef, MapRefContent(loDetail.PrefVendorRef));
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1218,6 +1224,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             loR.Set(loDataModel.Desc, GetAsString(loDetail.Desc));
             loR.Set(loDataModel.ORPrice, GetAsDouble(loDetail.ORPrice));
             loR.Set(loDataModel.AccountRef, MapRefContent(loDetail.AccountRef));
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1232,6 +1239,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loR.Set(loDataModel.Type, GetAsString(loDetail.Type));
             }
 
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1252,6 +1260,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loR.Set(loDataModel.DiscountPct, GetAsInt(loDetail.DiscountPct));
             }
 
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1268,6 +1277,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loR.Set(loDataModel.Initial, GetAsString(loDetail.Initial));
             }
 
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1376,6 +1386,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loDataReturn.Set(loDataModel.ORInvoiceLineAddList, MaxConvertLibrary.SerializeObjectToString(laLine));
             }
 
+            loDataReturn.ClearChanged();
             return loDataReturn;
         }
 
@@ -1802,6 +1813,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 loR.Set(loDataModel.State, GetAsString(loDetail.State));
             }
 
+            loR.ClearChanged();
             return loR;
         }
 
@@ -1906,6 +1918,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
 
             }
 
+            loR.ClearChanged();
             return loR;
         }
 

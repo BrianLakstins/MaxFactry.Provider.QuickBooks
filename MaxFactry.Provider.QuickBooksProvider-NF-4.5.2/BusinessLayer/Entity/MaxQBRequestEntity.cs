@@ -199,16 +199,12 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
         public MaxEntityList LoadAllActiveByUser(string lsUsername)
         {
-            MaxDataList loDataList = MaxQuickbooksProviderRepository.SelectAllActiveByProperty(this.Data, DataModel.Username, lsUsername);
-            MaxEntityList loEntityList = MaxEntityList.Create(this.GetType(), loDataList);
-            return loEntityList;
+            return this.LoadAllActiveByProperty(DataModel.Username, lsUsername);
         }
 
         public MaxEntityList LoadAllActiveBySessionId(Guid loSessionId)
         {
-            MaxDataList loDataList = MaxQuickbooksProviderRepository.SelectAllActiveByProperty(this.Data, DataModel.SessionId, loSessionId);
-            MaxEntityList loEntityList = MaxEntityList.Create(this.GetType(), loDataList);
-            return loEntityList;
+            return this.LoadAllActiveByProperty(DataModel.SessionId, loSessionId);
         }
 
         /// <summary>
