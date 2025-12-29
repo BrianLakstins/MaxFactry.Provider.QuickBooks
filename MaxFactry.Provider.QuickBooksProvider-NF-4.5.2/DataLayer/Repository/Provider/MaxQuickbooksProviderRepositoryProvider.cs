@@ -43,11 +43,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
     /// <summary>
     /// Default Provider for MaxQuickbooksProviderRepository
     /// </summary>
-<<<<<<< HEAD
     public class MaxQuickbooksProviderRepositoryProvider : MaxFactry.Base.DataLayer.Provider.MaxBaseWriteRepositoryDefaultProvider, IMaxQuickbooksProviderRepositoryProvider
-=======
-    public class MaxQuickbooksProviderRepositoryProvider : MaxFactry.Base.DataLayer.Provider.MaxBaseRepositoryDefaultProvider, IMaxQuickbooksProviderRepositoryProvider
->>>>>>> 9abc18810ac4383c131662f5b24ab00208cb7872
     {
         private QBSessionManager _oQBSessionManager = null;
 

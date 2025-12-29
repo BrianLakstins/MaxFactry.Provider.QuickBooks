@@ -151,17 +151,10 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Base">
-<<<<<<< HEAD
       <Version>1.0.26.1</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Core">
       <Version>1.0.26.1</Version>
-=======
-      <Version>1.0.24.51</Version>
-    </PackageReference>
-    <PackageReference Include="MaxFactry.General">
-      <Version>1.0.24.50</Version>
->>>>>>> 9abc18810ac4383c131662f5b24ab00208cb7872
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

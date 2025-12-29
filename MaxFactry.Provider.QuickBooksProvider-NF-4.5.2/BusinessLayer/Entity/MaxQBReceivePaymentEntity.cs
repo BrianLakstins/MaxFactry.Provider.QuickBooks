@@ -315,11 +315,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             MaxEntityList loR = MaxEntityList.Create(this.GetType());
             int lnTotal = int.MinValue;
-<<<<<<< HEAD
             MaxDataList loDataList = MaxQuickbooksProviderRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
-=======
-            MaxDataList loDataList = MaxBaseRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
->>>>>>> 9abc18810ac4383c131662f5b24ab00208cb7872
             loR = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
             return loR;
