@@ -790,7 +790,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             this.Set(this.DataModel.RefNumber, lsRefNumber);
             MaxData loDataFilter = new MaxData(this.Data);
             //// Add a Query 
-            MaxDataQuery loDataQuery = new MaxDataQuery();
+            MaxDataQuery loDataQuery = this.GetDataQuery();
             loDataQuery.StartGroup();
             loDataQuery.AddFilter(this.DataModel.RefNumber, "=", lsRefNumber);
             loDataQuery.AddCondition("AND");
@@ -799,7 +799,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             MaxEntityList loR = MaxEntityList.Create(this.GetType());
             int lnTotal = int.MinValue;
+<<<<<<< HEAD
             MaxDataList loDataList = MaxQuickbooksProviderRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
+=======
+            MaxDataList loDataList = MaxBaseRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
+>>>>>>> 9abc18810ac4383c131662f5b24ab00208cb7872
             loR = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
             return loR;
@@ -810,7 +814,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             this.Set(this.DataModel.IsPaid, lbIsPaid);
             MaxData loDataFilter = new MaxData(this.Data);
             //// Add a Query 
-            MaxDataQuery loDataQuery = new MaxDataQuery();
+            MaxDataQuery loDataQuery = this.GetDataQuery();
             loDataQuery.StartGroup();
             loDataQuery.AddFilter(this.DataModel.IsPaid, "=", lbIsPaid.ToString());
             loDataQuery.AddCondition("AND");
@@ -819,7 +823,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             MaxEntityList loR = MaxEntityList.Create(this.GetType());
             int lnTotal = int.MinValue;
+<<<<<<< HEAD
             MaxDataList loDataList = MaxQuickbooksProviderRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
+=======
+            MaxDataList loDataList = MaxBaseRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
+>>>>>>> 9abc18810ac4383c131662f5b24ab00208cb7872
             loR = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
             return loR;
@@ -830,7 +838,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             this.Set(this.DataModel.IsPaid, lbIsPaid);
             MaxData loDataFilter = new MaxData(this.Data);
             //// Add a Query 
-            MaxDataQuery loDataQuery = new MaxDataQuery();
+            MaxDataQuery loDataQuery = this.GetDataQuery();
             loDataQuery.StartGroup();
             loDataQuery.AddFilter(this.DataModel.TxnDate, "=", ldTxnDate.ToString());
             loDataQuery.AddCondition("AND");
@@ -841,7 +849,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
 
             MaxEntityList loR = MaxEntityList.Create(this.GetType());
             int lnTotal = int.MinValue;
+<<<<<<< HEAD
             MaxDataList loDataList = MaxQuickbooksProviderRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
+=======
+            MaxDataList loDataList = MaxBaseRepository.Select(this.Data, loDataQuery, 0, 0, string.Empty);
+>>>>>>> 9abc18810ac4383c131662f5b24ab00208cb7872
             MaxEntityList loList = MaxEntityList.Create(this.GetType(), loDataList);
             loR.Total = lnTotal;
 

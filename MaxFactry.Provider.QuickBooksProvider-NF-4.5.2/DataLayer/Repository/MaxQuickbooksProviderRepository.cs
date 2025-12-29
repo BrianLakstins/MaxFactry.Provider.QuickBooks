@@ -40,7 +40,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer
     /// <summary>
     /// Repository for managing quickbooks related data storage.
     /// </summary>
+<<<<<<< HEAD
     public class MaxQuickbooksProviderRepository : MaxFactry.Base.DataLayer.MaxIdGuidRepository
+=======
+    public class MaxQuickbooksProviderRepository : MaxFactry.Base.DataLayer.MaxBaseRepository
+>>>>>>> 9abc18810ac4383c131662f5b24ab00208cb7872
     {
 
 

@@ -39,7 +39,11 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer
     /// <summary>
     /// Interface for MaxQuickbooksProviderRepository
     /// </summary>
+<<<<<<< HEAD
     public interface IMaxQuickbooksProviderRepositoryProvider : MaxFactry.Base.DataLayer.IMaxBaseWriteRepositoryProvider
+=======
+    public interface IMaxQuickbooksProviderRepositoryProvider : MaxFactry.Base.DataLayer.IMaxBaseRepositoryProvider
+>>>>>>> 9abc18810ac4383c131662f5b24ab00208cb7872
     {
       
     }
