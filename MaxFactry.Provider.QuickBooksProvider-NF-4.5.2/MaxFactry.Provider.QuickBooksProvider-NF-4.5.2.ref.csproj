@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Lakstins Family LLC Code Signing.pfx" />
     <None Include="MaxFactry.pfx" />
     <None Include="MaxFactry.snk" />
     <None Include="QBSDK_ProGuide.pdf" />
@@ -158,10 +159,6 @@
     <ProjectReference Include="..\..\MaxFactry.Core\MaxFactry.Core-NF-4.5.2\MaxFactry.Core-NF-4.5.2.csproj">
       <Project>{db84bcde-6f72-4657-811f-40a824ae041f}</Project>
       <Name>MaxFactry.Core-NF-4.5.2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MaxFactry.General\MaxFactry.General-NF-4.5.2\MaxFactry.General-NF-4.5.2.ref.csproj">
-      <Project>{a625c04c-84c7-4d75-8e53-8b37542235e0}</Project>
-      <Name>MaxFactry.General-NF-4.5.2.ref</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

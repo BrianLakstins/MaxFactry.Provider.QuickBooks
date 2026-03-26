@@ -151,7 +151,7 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Base">
-      <Version>1.0.26.2</Version>
+      <Version>1.0.26.12</Version>
     </PackageReference>
     <PackageReference Include="MaxFactry.Core">
       <Version>1.0.26.3</Version>
