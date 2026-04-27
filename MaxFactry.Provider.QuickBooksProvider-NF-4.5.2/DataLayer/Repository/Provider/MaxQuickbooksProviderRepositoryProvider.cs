@@ -109,6 +109,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             catch (Exception loE)
             {
                 MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "OpenConnection", MaxEnumGroup.LogCritical, "Exception", loE));
+                this.CloseConnection();
             }
 
             return false;
@@ -127,7 +128,7 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             }
             catch (Exception loE)
             {
-                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "OpenConnection", MaxEnumGroup.LogCritical, "Exception", loE));
+                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "CloseConnection", MaxEnumGroup.LogCritical, "Exception", loE));
             }
 
             return false;
@@ -146,6 +147,8 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
             catch (Exception loE)
             {
                 MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "BeginSession", MaxEnumGroup.LogCritical, "Exception", loE));
+                this.EndSession();
+                this.CloseConnection();
             }
 
             return false;
@@ -2095,18 +2098,20 @@ namespace MaxFactry.Provider.QuickbooksProvider.DataLayer.Provider
                 {
                     try
                     {
-                        this.BeginSession();
-                        try
+                        if (this.BeginSession())
                         {
-                            loR = this._oQBSessionManager.DoRequests(loRequest); 
-                        }
-                        catch (Exception loESession)
-                        {
-                            MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "GetSetResponse", MaxEnumGroup.LogCritical, "Exception within session", loESession));
-                        }
-                        finally
-                        {
-                            this.EndSession();
+                            try
+                            {
+                                loR = this._oQBSessionManager.DoRequests(loRequest);
+                            }
+                            catch (Exception loESession)
+                            {
+                                MaxLogLibrary.Log(new MaxLogEntryStructure(this.GetType(), "GetSetResponse", MaxEnumGroup.LogCritical, "Exception within session", loESession));
+                            }
+                            finally
+                            {
+                                this.EndSession();
+                            }
                         }
                     }
                     catch (Exception loEConnection)
