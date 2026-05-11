@@ -422,6 +422,24 @@ namespace MaxFactry.Provider.QuickbooksProvider.BusinessLayer
             }
         }
 
+        public double SubtotalTaxed
+        {
+            get
+            {
+                double lnR = 0;
+                for (int lnL = 0; lnL < this.ORInvoiceLineAddList.Count; lnL++)
+                {
+                    MaxQBInvoiceLineEntity loLine = this.ORInvoiceLineAddList[lnL] as MaxQBInvoiceLineEntity;
+                    if (!loLine.SalesTaxCodeRef.Equals("Non", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        lnR += loLine.Amount;
+                    }
+                }
+
+                return lnR;
+            }
+        }
+
         public string ItemSalesTaxRef
         {
             get
